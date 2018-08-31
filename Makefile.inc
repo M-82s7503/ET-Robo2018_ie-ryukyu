@@ -1,0 +1,38 @@
+mkfile_path := $(dir $(lastword $(MAKEFILE_LIST)))
+
+APPL_COBJS +=
+
+APPL_CXXOBJS += \
+util.o \
+AI_answer.o \
+MoveUtil.o \
+Reading_seg8.o \
+Moving.o \
+Moving_Measure.o \
+DistMeasure.o
+
+
+SRCLANG := c++
+
+ifdef CONFIG_EV3RT_APPLICATION
+
+# Include libraries
+include $(EV3RT_SDK_LIB_DIR)/libcpp-ev3/Makefile
+
+endif
+
+APPL_DIR += \
+	$(mkfile_path)trace \
+	$(mkfile_path)ai \
+	$(mkfile_path)block \
+	$(mkfile_path)unit \
+	$(mkfile_path)moving
+
+INCLUDES += \
+	-I$(mkfile_path)trace \
+	-I$(mkfile_path)ai \
+	-I$(mkfile_path)block \
+	-I$(mkfile_path)unit \
+	-I$(mkfile_path)moving
+
+COPTS += -fno-use-cxa-atexit
