@@ -26,13 +26,16 @@ APPL_DIR += \
 	$(mkfile_path)ai \
 	$(mkfile_path)block \
 	$(mkfile_path)unit \
-	$(mkfile_path)moving
+	$(mkfile_path)moving \
+	$(mkfile_path)util
 
 INCLUDES += \
 	-I$(mkfile_path)trace \
 	-I$(mkfile_path)ai \
 	-I$(mkfile_path)block \
 	-I$(mkfile_path)unit \
-	-I$(mkfile_path)moving
+	-I$(mkfile_path)moving \
+	-I$(mkfile_path)util
+
 
 COPTS += -fno-use-cxa-atexit
