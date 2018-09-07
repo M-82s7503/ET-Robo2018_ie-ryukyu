@@ -5,10 +5,9 @@ APPL_COBJS +=
 APPL_CXXOBJS += \
     util.o \
     app.o \
-    Parts.o \
     Tracer.o \
     DistMeasure.o \
-    Moving_Measure.o \
+    Parts.o \
     Moving.o \
     MoveUtil.o \
     AI_answer.o \
@@ -29,8 +28,9 @@ APPL_DIR += \
 	$(mkfile_path)ai/analyze \
 	$(mkfile_path)ai/move \
 	$(mkfile_path)block \
-	$(mkfile_path)unit \
 	$(mkfile_path)moving \
+	$(mkfile_path)moving/core \
+	$(mkfile_path)moving/unit \
 	$(mkfile_path)util
 
 INCLUDES += \
@@ -39,8 +39,9 @@ INCLUDES += \
 	-I$(mkfile_path)ai/analyze \
 	-I$(mkfile_path)ai/move \
 	-I$(mkfile_path)block \
-	-I$(mkfile_path)unit \
 	-I$(mkfile_path)moving \
+	-I$(mkfile_path)moving/core \
+	-I$(mkfile_path)moving/unit \
 	-I$(mkfile_path)util
 
 
