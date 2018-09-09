@@ -9,34 +9,21 @@
 #include <string.h>
 #include "util.h"
 
-#include "Moving_Measure.h"
+#include "Straight.h"
 
 using namespace ev3api;
 
-class Reading_seg8 : public Moving_Measure {
+class Reading_seg8 : public Straight {
   public:
-    Reading_seg8(float pwm, int* arr_digital);
-    void setArr_idx(int arr_idx);
+    Reading_seg8(Pointers pt_s, int base_pwm, int* arr_digital);
+    void run(int arr_idx, Enums::Directs ForB, int distance);
     void f_write();
 
   protected:
-    // 継承したら、必ず全部実装する。
-    float decide_pwm_r();   
-    float decide_pwm_l();
     bool break_condition();
     //void run_after();
   
   private:
-    enum {
-        // colorSensor.getColorNumber() の戻り値
-        GREY = 0,    // 無し
-        BLACK = 1,   // 黒
-        BLUE = 2 ,   // 青
-        GREEN = 3,   // 緑
-        YELLOW = 4,  // 黄
-        RED = 5,     // 赤
-        WHITE = 6,   // 白
-   };
 
     float base_pwm;
     // 白黒情報を保存する配列
@@ -50,7 +37,8 @@ class Reading_seg8 : public Moving_Measure {
     int color_tmp;
 
     // 動作変更位置。
-    static const int cond_len = 2;
-    float cond_dists[cond_len] = {150,160};
+    // 0:~0,  1:0~10,  2:10~130,  3:130~155
+    static const int cond_len = 4;
+    float cond_dists[cond_len];
     int posi_type(float dist);
 };

@@ -5,7 +5,7 @@
 // 初期処理用
 void init_f(const char *str) {
   // フォントの設定と0行目の表示
-  ev3_lcd_set_font(EV3_FONT_MEDIUM);
+  ev3_lcd_set_font(EV3_FONT_SMALL);
   ev3_lcd_draw_string(str, 0, 0);
 }
 
@@ -102,6 +102,3 @@ void msg_f(double n, int32_t line) {
   sprintf(str, "%lf", n);
   msg_f(str, line);
 }
-
-
-

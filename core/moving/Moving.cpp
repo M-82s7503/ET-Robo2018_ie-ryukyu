@@ -39,10 +39,11 @@ void Moving::run() {
         rightWheel->setPWM(pwm_r);
 
         // ボタンを押したら、動作を中断
-        //if(touchSensor.isPressed()){break;}
-        if(touchSensor->isPressed()){break;}
+        // デフォルトは、isTouch_break = false。
+        // 使いたい場合は、setTouch_break(bool isBreak) を呼び出す。
+        if(isTouch_break && touchSensor->isPressed()){break;}
         // (未) ここを消しても問題ないかを検証する
-        clock.wait(3);
+        //clock.wait(1);
 
         // break_condition() の T/F が入れ替わったので注意。
         if (break_condition()) {
@@ -54,6 +55,9 @@ void Moving::run() {
 }
 
 
+void Moving::setTouch_break(bool isBreak) {
+    isTouch_break = isBreak;
+}
 
 void Moving::stop() {
     //leftWheel.stop();

@@ -1,3 +1,6 @@
+#ifndef DIST_MEASURE_H_
+#define DIST_MEASURE_H_
+
 #include <cstdlib>
 
 #include "Motor.h"
@@ -20,3 +23,6 @@ class DistMeasure {
     int32_t startDig_L;
     int32_t startDig_R;
 };
+
+
+#endif  // DIST_MEASURE_H_

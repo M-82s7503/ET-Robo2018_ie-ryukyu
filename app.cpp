@@ -5,9 +5,6 @@
 using namespace ev3api;
 
 
-AI_answer ai_ans;
-Block_answer block_ans;
-
 void ext_cyc(intptr_t exinf) {
     act_tsk(EXT_TASK);
 }
@@ -19,6 +16,15 @@ void ext_task(intptr_t exinf) {
     ext_tsk();
 }
 
+
+Block_answer block_ans;
+
+Motor leftWheel(PORT_C);
+Motor rightWheel(PORT_B);
+TouchSensor touchSensor(PORT_1);
+ColorSensor colorSensor(PORT_2);
+Clock clock;
+
 void main_task(intptr_t unused) {
     // 【1】 ライントレース
     
@@ -28,8 +34,10 @@ void main_task(intptr_t unused) {
     // 【3】 ライントレース
 
     // 【4】 AIアンサー
+    AI_answer ai_ans;
     ai_ans.init();
-    ai_ans.readImg_degital();  // ;走行
+    ai_ans.readImg_degital(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
     ai_ans.terminate();
+    
     ext_tsk();
 }

@@ -7,6 +7,7 @@
 #include "util.h"
 #include "MoveUtil.h"
 #include "Reading_seg8.h"
+#include "Turn_oneSide.h"
 
 using namespace ev3api;
 
@@ -15,8 +16,18 @@ class AI_answer {
     AI_answer();
     void init();
     void terminate();
-    void readImg_degital();
-    void readImg_analog();
+    void readImg_degital(
+        Motor* l_Wheel,
+        Motor* r_Wheel,
+        ColorSensor* c_Sensor,
+        TouchSensor* t_Sensor
+    );
+    void readImg_analog(
+        Motor* l_Wheel,
+        Motor* r_Wheel,
+        ColorSensor* c_Sensor,
+        TouchSensor* t_Sensor
+    );
 
     // デジタルの数字。７本あれば表現可能。
     int num_img_digital[7];
@@ -24,21 +35,11 @@ class AI_answer {
     int num_img_analog[12];
 
   private:
-    enum {
-        // colorSensor.getColorNumber() の戻り値
-        GREY = 0,    // 無し
-        BLACK = 1,   // 黒
-        BLUE = 2 ,   // 青
-        GREEN = 3,   // 緑
-        YELLOW = 4,  // 黄
-        RED = 5,     // 赤
-        WHITE = 6,   // 白
-    };
+    Clock clock;
 
     //static const Parts parts = new Parts();
     MoveUtil moveUtil;
 
-    const int8_t mThreshold = 20;
     const int8_t pwm = (Motor::PWM_MAX) / 4;
 
     void init_arr_all0(int* arr);
@@ -46,7 +47,7 @@ class AI_answer {
     const int img_size_yoko = 310;
 
     // 灰色の終点から緑まで
-    int leng_to_greenMat = 400; // 27+13(<3)
-    int img_size_tate_3 = img_size_tate / 3;
-
+    int until_greenMat = 400; // 27+13(<3)
+    int tate_4 = img_size_tate / 4;
+    int yoko_2 = img_size_yoko /2;
 };

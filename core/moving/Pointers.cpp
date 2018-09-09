@@ -5,12 +5,14 @@ Pointers::Pointers(
     Motor* r_Wheel, 
     ColorSensor* c_Sensor,
     TouchSensor* t_Sensor
-) {
+)
+{
     leftWheel = l_Wheel;
     rightWheel = r_Wheel;
     colorSensor = c_Sensor;
     touchSensor = t_Sensor;
 }
+
 
 /*
 Clock getClock() {

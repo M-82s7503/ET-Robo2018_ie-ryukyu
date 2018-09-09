@@ -20,6 +20,7 @@ class Moving {
     void run();
     //止めるときだけに使う。
     void stop();
+    void setTouch_break(bool isBreak);
 
   protected:
     // 継承したら、必ず全部実装する。
@@ -33,6 +34,7 @@ class Moving {
     TouchSensor* touchSensor;
     Clock clock;
 
+    bool isTouch_break = true;
 };
 
 

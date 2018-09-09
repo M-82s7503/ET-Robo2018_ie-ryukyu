@@ -2,8 +2,6 @@
 #define MY_UNTL_H_
 
 #include "ev3api.h"
-//#include <tiny_dnn/tiny_dnn.h>
-
 
 extern void init_f(const char *str);
 extern void msg_f(const char *str, int32_t line);
