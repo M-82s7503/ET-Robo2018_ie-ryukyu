@@ -31,6 +31,7 @@ APPL_DIR += \
     $(mkfile_path)core \
     $(mkfile_path)core/util \
     $(mkfile_path)core/moving \
+    $(mkfile_path)core/moving_impl \
     $(mkfile_path)ai \
     $(mkfile_path)ai/move \
     $(mkfile_path)ai/analyze \
@@ -41,6 +42,7 @@ INCLUDES += \
     -I$(mkfile_path)core \
     -I$(mkfile_path)core/util \
     -I$(mkfile_path)core/moving \
+    -I$(mkfile_path)core/moving_impl \
     -I$(mkfile_path)ai \
     -I$(mkfile_path)ai/move \
     -I$(mkfile_path)ai/analyze \
