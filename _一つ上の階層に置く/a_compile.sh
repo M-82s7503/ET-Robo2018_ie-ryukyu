@@ -7,3 +7,5 @@ python3 edit_Makefile.inc.py "$1"
 make app="$1"
 
 mv 'app' "$1_app"
+echo
+echo "$1_app"

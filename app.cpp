@@ -36,7 +36,8 @@ void main_task(intptr_t unused) {
     // 【4】 AIアンサー
     AI_answer ai_ans;
     ai_ans.init();
-    ai_ans.readImg_degital(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
+    ai_ans.readImg_digital(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
+    ai_ans.readImg_analog(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
     ai_ans.terminate();
     
     ext_tsk();

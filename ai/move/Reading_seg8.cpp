@@ -2,20 +2,29 @@
 
 /* 
 * 数字の読み取り
+* ：デジタル数字
 */
 
 
-//--  Moving  --//
-Reading_seg8::Reading_seg8(Pointers pt_s, int base_pwm, int* arr_digital)
-    : Straight(pt_s, base_pwm), num_img_arr(arr_digital)       // 引数の値でメンバ変数を初期化
+Reading_seg8::Reading_seg8(Pointers pt_s, int base_pwm, int* arr_digital):
+    Moving(pt_s)
+    , distMeasure(pt_s.getLeftWheel(), pt_s.getRightWheel())
+    , speed(base_pwm), num_img_arr(arr_digital)       // 引数の値でメンバ変数を初期化
 {
     color_tmp = Enums::WHITE;
     arr_idx = 0;
 }
 
 
-
-//--  original  --//
+// オーバーライド：Moving
+/*
+float Reading_seg8::decide_pwm_r(){
+    return speed;
+}
+float Reading_seg8::decide_pwm_l(){
+    return speed;
+}
+*/
 bool Reading_seg8::break_condition() {
     // 一定距離進んで、黒があれば 1、無ければ 0 を、num_img_digital に入れる。
     // 現在の距離を取得。
@@ -72,33 +81,37 @@ void Reading_seg8::f_write() {
 
     */
     // 配列で書き出し
-    fprintf(file, "[");
+    fprintf(file, "{");
     for(int i=0; i<7; i++){
         sprintf(arr, "%d, ", num_img_arr[i]);
         //clock.sleep(1000);  //画面表示を見やすくするためらしい。
         fprintf(file, "%s", arr);
     }
-    fprintf(file, "]\n\n\n");
+    fprintf(file, "}\n\n\n");
 
     // わかりやすく書き出し
     for(int i=0; i<7; i++){
-        if (num_img_arr[mapArr[i]] == 1) {
-            switch (i%3) {
-                case 0:
+        switch (i%3) {
+            case 0:
+                if (num_img_arr[mapArr[i]] == 1) {
                     // 3の倍数番目の場合：「 - 」
-                    fprintf(file," - \n");
-                    break;
-                case 1:
+                    fprintf(file," - ");
+                } else {
+                    fprintf(file, "   ");
+                }
+                break;
+            case 1:
+            case 2:
+                if (num_img_arr[mapArr[i]] == 1) {
                     // 奇数の場合：「| |」
                     fprintf(file,"| ");
-                    break;
-                case 2:
-                    // 奇数の場合：「| |」
-                    fprintf(file,"| \n");
-                    break;
-            }
-        } else {
-            fprintf(file, "  ");
+                } else {
+                    fprintf(file, "  ");
+                }
+                break;
+        }
+        if (i%3 != 1) {
+            fprintf(file,"\n");
         }
     }
     fprintf(file,"\n\n");
@@ -106,7 +119,10 @@ void Reading_seg8::f_write() {
 }
 
 
-void Reading_seg8::run(int idx, Enums::Directs ForB, int distance) {
+
+
+//--  original  --//
+void Reading_seg8::run(int idx, int distance) {
     arr_idx = idx;
     cond_dists[0] = 0;
     cond_dists[0] = distance / 6;
@@ -114,7 +130,7 @@ void Reading_seg8::run(int idx, Enums::Directs ForB, int distance) {
     cond_dists[2] = distance;
     // ［？］Straight の break_condition() が呼ばれる可能性が高い...。
     // → その場合は、 Straight からコピペしてくる。Movng_ex を継承するスタイルに変更。
-    Moving_ex::run(ForB, distance);
+    Moving::run();
 }
 
 

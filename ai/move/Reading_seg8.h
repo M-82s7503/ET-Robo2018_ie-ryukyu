@@ -9,30 +9,33 @@
 #include <string.h>
 #include "util.h"
 
-#include "Straight.h"
+#include "Moving.h"
+#include "DistMeasure.h"
 
 using namespace ev3api;
 
-class Reading_seg8 : public Straight {
+class Reading_seg8 : public Moving {
   public:
     Reading_seg8(Pointers pt_s, int base_pwm, int* arr_digital);
-    void run(int arr_idx, Enums::Directs ForB, int distance);
-    void f_write();
+    void run(int arr_idx, int distance);
+    void f_write();  // ファイルに出力
 
   protected:
+    float decide_pwm_r() { return speed; }
+    float decide_pwm_l() { return speed; }
     bool break_condition();
-    //void run_after();
   
   private:
-
-    float base_pwm;
+    //##  走行に関するもの  ##//
+    DistMeasure distMeasure;
+    int speed;
     // 白黒情報を保存する配列
     int* num_img_arr;
     int arr_idx;  // 今回読み取る位置。
     // 配列を描画する用のマップ配列
-    int mapArr[7] = {7,2,1,6,3,4,5};
+    const int mapArr[7] = {7,2,1,6,3,4,5};
 
-
+    // tmp変数
     float now_dist;
     int color_tmp;
 

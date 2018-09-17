@@ -4,7 +4,11 @@ mkfile_path := $(dir $(lastword $(MAKEFILE_LIST)))
 APPL_COBJS +=
 
 APPL_CXXOBJS += \
+    test_main.o \
+    answer_arrays.o \
+    PatternMatcher.o \
     AI_answer.o \
+    Reading_return3.o \
     Reading_seg8.o \
     Turn_oneSide.o \
     Straight.o \
@@ -35,6 +39,7 @@ APPL_DIR += \
     $(mkfile_path)ai \
     $(mkfile_path)ai/move \
     $(mkfile_path)ai/analyze \
+    $(mkfile_path)ai/analyze/pattern_match \
     $(mkfile_path)block 
 
 INCLUDES += \
@@ -46,6 +51,7 @@ INCLUDES += \
     -I$(mkfile_path)ai \
     -I$(mkfile_path)ai/move \
     -I$(mkfile_path)ai/analyze \
+    -I$(mkfile_path)ai/analyze/pattern_match \
     -I$(mkfile_path)block 
 
 
