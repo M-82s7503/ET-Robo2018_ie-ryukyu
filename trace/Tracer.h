@@ -1,6 +1,6 @@
 #include "Motor.h"
 #include "ColorSensor.h"
-#include "clock.h"
+#include "Clock.h"
 #include "TouchSensor.h"
 
 #include "DistMeasure.h"

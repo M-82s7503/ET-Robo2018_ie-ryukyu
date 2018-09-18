@@ -29,7 +29,7 @@ float DistMeasure::getNowDist(Enums::Directs whichWheel) {
   // 360° 回転する間に 320 進むらしいので、
   // 320/360 = 8/9 [mm/度]
   // よって、距離に変換したいなら、 8/9 をかければ良い。
-  msg_f("getNowDist()", 1);
+  //msg_f("getNowDist()", 1);
   switch (whichWheel) {
     case Enums::LEFT :
       return abs(leftWheel->getCount() - startDig_L) * 8 / 9;
