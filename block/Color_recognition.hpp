@@ -1,3 +1,9 @@
+#include "ColorSensor.h"
+
+#include "util.h"
+#include "Enums.h"
+
+using namespace ev3api;
 
 /* 色に関するクラス */
 class Color_recognition{

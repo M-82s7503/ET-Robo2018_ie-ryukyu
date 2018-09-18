@@ -34,7 +34,6 @@ Map_Move::Map_Move()
   map_color[3][2] = RED;
   map_color[3][3] = YELLOW;
 
-
 }
 
 /* 暗号よりブロックの初期配置の計算 */
@@ -78,8 +77,7 @@ void Map_Move::priority_move(int* move_x,int* move_y,int block[N][N])
 }
 
 /* ブロックを移動させる座標を決定する */
-void Map_Move::move_point(int block_color,int* move_x,int* move_y,int block[N][N])
-{
+void Map_Move::move_point(int block_color,int* move_x,int* move_y,int block[N][N]) {
   int i,j;
   int box,distance;
 
@@ -99,11 +97,4 @@ void Map_Move::move_point(int block_color,int* move_x,int* move_y,int block[N][N
 
     }
   }
-
-  block[*move_y][*move_x] = AFTER_MOVE_BLOCK;
-  /*
-  msg_f(move_x, 1);
-  msg_f(move_y, 2);
-  */
-
 }

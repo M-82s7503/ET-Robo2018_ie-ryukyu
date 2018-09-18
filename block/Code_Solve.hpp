@@ -1,3 +1,5 @@
+#include <cmath>
+
 /* 暗号を解くクラス */
 class Code_Solve{
 private:

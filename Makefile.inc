@@ -4,6 +4,11 @@ mkfile_path := $(dir $(lastword $(MAKEFILE_LIST)))
 APPL_COBJS +=
 
 APPL_CXXOBJS += \
+    Color_recognition..o \
+    Block_answer.o \
+    Code_Solve.o \
+    Map_Move.o \
+    MoveUtil_Block.o \
     test_main.o \
     answer_arrays.o \
     PatternMatcher.o \
@@ -33,6 +38,7 @@ endif
 APPL_DIR += \
     $(mkfile_path)trace \
     $(mkfile_path)core \
+    $(mkfile_path)core/move \
     $(mkfile_path)core/util \
     $(mkfile_path)core/moving \
     $(mkfile_path)core/moving_impl \
@@ -45,6 +51,7 @@ APPL_DIR += \
 INCLUDES += \
     -I$(mkfile_path)trace \
     -I$(mkfile_path)core \
+    -I$(mkfile_path)core/move \
     -I$(mkfile_path)core/util \
     -I$(mkfile_path)core/moving \
     -I$(mkfile_path)core/moving_impl \

@@ -1,6 +1,6 @@
 #include "app.h"
-#include "AI_answer.h"
-#include "Block_answer.h"
+#include "AI_answer.hpp"
+#include "Block_answer.hpp"
 
 using namespace ev3api;
 
