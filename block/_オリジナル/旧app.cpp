@@ -21,10 +21,17 @@ using namespace ev3api;
 #define RED 5     // 赤
 #define WHITE 6   // 白
 
+/* mapに関する宣言 */
 #define N 4
 #define NO_EXIST 0
 #define BEFORE_MOVE_BLOCK 1
 #define AFTER_MOVE_BLOCK 2
+
+/* 動きに関する宣言 */
+#define DELTA_T 0.004
+#define KP 1.34
+#define KI 4.46
+#define KD 0.167
 
 /* Map関するクラス */
 class Map_Move{
@@ -141,13 +148,6 @@ void Map_Move::move_point(int block_color,int* move_x,int* move_y,int block[N][N
 
     }
   }
-
-  block[*move_y][*move_x] = AFTER_MOVE_BLOCK;
-  /*
-  msg_f(move_x, 1);
-  msg_f(move_y, 2);
-  */
-
 }
 
 /* 暗号を解くクラス */
@@ -188,9 +188,16 @@ private:
   Motor leftWheel;
   Motor rightWheel;
   Motor handWheel;
+  ColorSensor colorsensor;
   Clock clock;
   int speed;
   uint32_t E_time;
+  
+  int diff[2];
+  float intergral;
+  int8_t target_val;
+  int8_t sensor_val;
+  int8_t control_speed;
 public:
   MoveUtil();
   void turn(int degree);
@@ -198,13 +205,19 @@ public:
   void back(int distance); // mm戻るプログラム
   void purpose_move(int* car_x,int* car_y,int move_x,int move_y,int* car_degree,int block[4][4],int handdegree);
   void back_move(int car_degree,int* car_x,int* car_y);
+  float block_pid(int8_t sensor_val,int8_t target_val);
+  void pid_straight(int distance);
+  void to_color(int color);
+  void hand_move(int jud);
 };
 
 //初期化
 MoveUtil::MoveUtil():
-  leftWheel(PORT_C),rightWheel(PORT_B),handWheel(PORT_A)
+  leftWheel(PORT_C),rightWheel(PORT_B),handWheel(PORT_A),colorsensor(PORT_2)
 {
-  speed = 20;
+  speed = (Motor::PWM_MAX) / 6;
+  sensor_val = colorsensor.getBrightness();
+  target_val = 11;
 }
 
 //指定の角度分曲がる(-180~180)
@@ -213,7 +226,6 @@ void MoveUtil::turn(int degree) {
   clock.reset();//クロックをリセット
 
   while (1) {
-    //    msg_f("turn...", 1);
     //degreeが0以上で右回転、未満で左回転
     if (degree >= 0){
       leftWheel.setPWM(-speed);
@@ -235,8 +247,9 @@ void MoveUtil::turn(int degree) {
 void MoveUtil::straight(int distance){
   E_time = distance * 4.5;
   clock.reset();
+
   while (1) {
-    //    msg_f("straight...", 1);
+
     leftWheel.setPWM(speed);
     rightWheel.setPWM(speed);
 
@@ -248,30 +261,78 @@ void MoveUtil::straight(int distance){
   }
 }
 
-//指定の距離進む                                                                                                                                                       
+//指定の距離進む                                                                                                                                                  
 void MoveUtil::back(int distance){
   E_time = distance * 4.5;
   clock.reset();
-  while (1) {
-    //    msg_f("straight...", 1);
+  while(1){
     leftWheel.setPWM(-speed/2);
     rightWheel.setPWM(-speed/2);
+    
+    if (clock.now() >= E_time){
+      leftWheel.stop();
+      rightWheel.stop();
+      break;
+    }
+  }
+
+}
+
+/* ブロック並べの際のpid制御 */
+float MoveUtil::block_pid(int8_t sensor_val,int8_t target_val){
+  float p, i, d;
+
+  diff[0] = diff[1];
+  diff[1] = sensor_val - target_val;
+  intergral += (diff[1] + diff[0]) / 2.0*DELTA_T;
+
+  p = KP * diff[1];
+  i = KI * intergral;
+  d = KD * (diff[1] - diff[0]) / DELTA_T;
+
+  return p+d;
+}
+
+//指定の距離進む                                                                                                                                                                             
+void MoveUtil::pid_straight(int distance){
+  E_time = distance * 4.7;
+  clock.reset();
+
+  while (1) {
+    sensor_val = colorsensor.getBrightness();
+    control_speed = block_pid(sensor_val,target_val);
+    leftWheel.setPWM(speed+control_speed);
+    rightWheel.setPWM(speed-control_speed);
 
     if (clock.now() >= E_time){
       leftWheel.stop();
       rightWheel.stop();
       break;
     }
-　  }
+  }
+}
+
+void MoveUtil::to_color(int color){
+  while(1) {
+    leftWheel.setPWM(speed);
+    rightWheel.setPWM(speed);
+    if (colorsensor.getColorNumber() == color) {
+      leftWheel.stop();
+      rightWheel.stop();
+      break;
+    }
+  }
 }
 
 //目標の座標まで移動する
-void MoveUtil::purpose_move(int* car_x,int* car_y,int move_x,int move_y,int* car_degree,int block[4][4],int handdegree){
+void MoveUtil::purpose_move(int* car_x,int* car_y,int move_x,int move_y,int* car_degree,int block[4][4],int jud){
   
-  handWheel.setPWM(handdegree);
+  hand_move(jud);
+  bool flag1,flag2;
+
+  flag1 = flag2 = false;
 
   do{
-
     /* 機体の角度の調整 */
     if(*car_x != move_x){
       if(*car_x < move_x){
@@ -311,14 +372,16 @@ void MoveUtil::purpose_move(int* car_x,int* car_y,int move_x,int move_y,int* car
 	if(*car_x > move_x){
 	  if(block[*car_y][*car_x-1] != AFTER_MOVE_BLOCK){
 	    (*car_x)--;
-	    straight(450);
+	    straight(40);
+	    //to_color(RED);
 	  }else{
 	    break;
 	  }
 	}else{ 
 	  if(block[*car_y][*car_x+1] != AFTER_MOVE_BLOCK){
 	    (*car_x)++;
-	    straight(450);
+	    straight(40);
+	    //to_color(RED);
 	  }else{ 
 	    break;
 	  }
@@ -346,7 +409,7 @@ void MoveUtil::purpose_move(int* car_x,int* car_y,int move_x,int move_y,int* car
       }else if(*car_y < move_y){
 	switch(*car_degree){
 	case 0:
-	  turn(90);
+	  turn(-90);
 	  *car_degree = 270;
 	  break;
 	case 90:
@@ -365,22 +428,33 @@ void MoveUtil::purpose_move(int* car_x,int* car_y,int move_x,int move_y,int* car
 	if(*car_y > move_y){
 	  if(block[*car_y-1][*car_x] != AFTER_MOVE_BLOCK){
 	    (*car_y)--;
-	    straight(400);
+	    straight(35);
+	    //to_color(RED);
 	  }else{
 	    break;
 	  }
 	}else{
 	  if(block[*car_y+1][*car_x] != AFTER_MOVE_BLOCK){
 	    (*car_y)++;
-	    straight(400);
+	    straight(35);
+	    //to_color(RED);
 	  }else{
 	    break;
 	  }
 	}
       }
     }
-     
-  }while(*car_x != move_x && *car_y != move_y);
+
+    if(*car_x == move_x){
+      flag1 = true;
+    }
+
+    if(*car_y == move_y){
+      flag2 = false;
+    }
+ 
+
+  }while(flag1 != true && flag2 != true);
   
 }
 
@@ -404,6 +478,18 @@ void MoveUtil::back_move(int car_degree,int* car_x,int* car_y){
     break;
   }
 
+}
+
+/* 引数によって機体のハンドを動かす */
+void MoveUtil::hand_move(int jud){
+  while(1){                                                                                                                                                                                 
+    handWheel.setPWM(jud);                                                                                                                                                                            
+    msg_f(handWheel.getCount(), 3);                                                                                                                                                                   
+    if(handWheel.getCount() > 60){                                                                                                                                                                    
+      handWheel.stop();  
+      break;                                                                                                                                                                                           
+    }                                                                                                                                                                                                  
+  }         
 }
 
 /* 色に関するクラス */
@@ -475,63 +561,81 @@ void main_task(intptr_t unused) {
   int code_num = 84722;
   int solve_num[5];
   int count;
-
+  int i,j;
+  Motor handWheel(PORT_A);
+  Motor leftWheel(PORT_C);
+  Motor rightWheel(PORT_B);
   count = 0; 
 
-  code.Solve(solve_num,code_num);
-  map.block_jud(solve_num);
+  //tai.to_color(RED);
+  
+
   /*
-  map.priority_move(&map.move_x,&map.move_y,map.block); 
-  tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,2);
-
-  map.move_point(5,&map.move_x,&map.move_y,map.block);
-  
-  tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,-2);
-
-  tai.back_move(map.car_degree,&map.car_x,&map.car_y);
-
-  msg_f(map.car_x, 3);
-  msg_f(map.car_y, 4);
-
-  map.priority_move(&map.move_x,&map.move_y,map.block);
-  tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,2);
-  
-  msg_f(map.move_x, 1);
-  msg_f(map.move_y, 2);
-    
-  map.move_point(3,&map.move_x,&map.move_y,map.block);
-  tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,-2);
-
-  tai.back_move(map.car_degree,&map.car_x,&map.car_y);
-  */
-
-  init_f(__FILE__);
-
-  while(1) {   
-    /*
-    map.priority_move(&map.move_x,&map.move_y);
-    tai.purpose_move(map.car_x,map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,2);
-
-    map.move_point(color.OutputColor(),&map.car_x,&map.car_y,&map.move_x,&map.move_y,map.block);
-    tai.purpose_move(map.car_x,map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,-2);
-
-    tai.back_move(map.car_degree,&map.car_x,&map.car_y); 
-    
-    for(i = 0; i < 4; i++){
-      for(j = 0; j < 4; j++){
-	if(map.block[i][j] == AFTER_MOVE_BLOCK){
-	  count++;
-	}
-      }
+  while(1){
+    handWheel.setPWM(1);
+    msg_f(handWheel.getCount(), 3);  
+    if(handWheel.getCount() > 60){
+    handWheel.stop();
+      break;
     }
+  }
 
+  while(1){
+    handWheel.setPWM(-1);
+    msg_f(handWheel.getCount(), 4);
+    if(handWheel.getCount() < 0){
+      handWheel.stop();
+      break;
+    }
+  }
+  */
+  
+  code.Solve(solve_num,code_num);
+  map.block_jud(solve_num); // 暗号よりブロックの初期配置の計算
+  
+  // ブロックまで移動                                                                                                                                                                                   
+  map.priority_move(&map.move_x,&map.move_y,map.block); // 優先順位決定                                                                                                                                 
+  tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,1); // 目的まで移動                                                                                            
+  map.block[map.car_y][map.car_x] = NO_EXIST; // マップの更新                                                                                                                                          \
+                                                                                                                                                                                                          
+  // ブロックを指定の位置まで移動させる                                                                                                                                                                 
+  map.move_point(RED,&map.move_x,&map.move_y,map.block); // ブロックの色により向かう場所の決定                                                                                                          
+  tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,-1); // 目的まで移動                                                                                          \
+                                                                                                                                                                                                          
+  // 次のブロックを探すために一個前に戻る                                                                                                                                                               
+  map.block[map.move_y][map.move_x] = AFTER_MOVE_BLOCK; // マップの更新                                                                                                                                 
+  tai.back_move(map.car_degree,&map.car_x,&map.car_y); // 一個前の座標に移動     
+
+
+  while(1) { 
+    /*    
+    // ブロックまで移動                                                                                                                                                                
+    map.priority_move(&map.move_x,&map.move_y,map.block); // 優先順位決定                                                                                                                     
+    tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,1); // 目的まで移動                                                                             
+    map.block[map.car_y][map.car_x] = NO_EXIST; // マップの更新                                                                                                                                             
+    // ブロックを指定の位置まで移動させる                                                                                                                            
+    map.move_point(RED,&map.move_x,&map.move_y,map.block); // ブロックの色により向かう場所の決定                         
+    tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,-1); // 目的まで移動                                                                                            
+    // 次のブロックを探すために一個前に戻る                                                                                                                                                       
+    map.block[map.move_y][map.move_x] = AFTER_MOVE_BLOCK; // マップの更新                                                                                                                       
+    tai.back_move(map.car_degree,&map.car_x,&map.car_y); // 一個前の座標に移動
+  
+    // 終了条件
+    for(i = 0; i < 4; i++){                                                     
+      for(j = 0; j < 4; j++){                                                   
+        if(map.block[i][j] == AFTER_MOVE_BLOCK){                                
+          count++;                                                              
+        }                                                                       
+      }                                                                         
+    }               
+ 
     if(count == N){
       break;
     }else{
       count = 0;
     }
+    
     */
-
     // 左ボタンを長押し、それを捕捉する
     if (ev3_button_is_pressed(LEFT_BUTTON)) {
       break;
@@ -543,3 +647,4 @@ void main_task(intptr_t unused) {
 
   ext_tsk(); // tasl end
 }
+
