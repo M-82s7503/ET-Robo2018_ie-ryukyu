@@ -1,7 +1,7 @@
 /*
 
 2018/09/19
-[ver1.0]
+[ver1.1]
 
 */
 
@@ -28,7 +28,6 @@ protected:
 
   bool rightSearch;
   int speed;
-  int pwm;
   int32_t startDig;//開始時の角位置
   int32_t endDig;//終了角位置
 
@@ -40,6 +39,6 @@ public:
   void stop();
   void to_color(int color);
   int to_color_turn(int color);
-
+  void setSpeed(int a);
 };
 #endif  // MOVEUTIL_H_

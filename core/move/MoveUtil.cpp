@@ -1,7 +1,7 @@
 /*
 
 2018/09/19
-[ver1.0]
+[ver1.1]
 
 */
 
@@ -13,7 +13,6 @@ MoveUtil::MoveUtil():
     colorSensor(PORT_2)
 {
   speed = 20;
-  pwm = (Motor::PWM_MAX)/6;
 }
 
 //指定の角度分曲がる(-180~180)
@@ -72,6 +71,7 @@ void MoveUtil::turn(int degree,int side) {
   }
 }
 
+
 //指定の距離進む
 void MoveUtil::straight(int distance){
 
@@ -108,8 +108,8 @@ void MoveUtil::stop(){
 
 void MoveUtil::to_color(int color){
     while(1) {
-        leftWheel.setPWM(pwm);
-        rightWheel.setPWM(pwm);
+        leftWheel.setPWM(speed);
+        rightWheel.setPWM(speed);
         if (colorSensor.getColorNumber() == color) {
                 break;
         }
@@ -144,12 +144,10 @@ int MoveUtil::to_color_turn(int color){
         turn(90);
         return 0;
       }
-
     }
   }
 }
 
-
-
-
-
+void MoveUtil::setSpeed(int a){
+  this->speed = a;
+}
