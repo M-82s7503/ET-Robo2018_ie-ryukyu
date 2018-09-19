@@ -23,6 +23,7 @@ class MoveUtil{
 protected:
   Motor leftWheel;
   Motor rightWheel;
+  Motor centerArm;
   ColorSensor colorSensor;
   Clock clock;
 

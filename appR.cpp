@@ -28,7 +28,7 @@ void main_task(intptr_t unused) {
     
     // 【2】 ブロック並べ
     Block_answer block_ans;
-    block_ans.run()
+    block_ans.run();
 
     ext_tsk();
 }
