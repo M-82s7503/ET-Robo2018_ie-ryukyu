@@ -1,7 +1,7 @@
 /*
 
 2018/09/19
-[ver1.1]
+[ver1.2]
 
 */
 
@@ -28,8 +28,10 @@ protected:
 
   bool rightSearch;
   int speed;
-  int32_t startDig;//開始時の角位置
-  int32_t endDig;//終了角位置
+  int32_t startLeftDig;//開始時左タイヤ角位置
+  int32_t startRightDig;//開始時の右タイヤ角位置
+  int32_t endLeftDig;//終了左タイヤ角位置
+  int32_t endRightDig;//終了右タイヤ角位置
 
 public:
   MoveUtil();
@@ -39,6 +41,8 @@ public:
   void stop();
   void to_color(int color);
   int to_color_turn(int color);
+  void resetArm();
+  void raiseArm(int degree, int pwm);
   void setSpeed(int a);
 };
 #endif  // MOVEUTIL_H_
