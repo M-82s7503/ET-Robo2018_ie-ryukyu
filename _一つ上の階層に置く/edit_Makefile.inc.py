@@ -10,7 +10,7 @@ def getList_cpp_a_dirs(dir):
         d_path = dir + f
         # 最初に '_' がついてるディレクトリは飛ばす設計にした。
         # .cpp ファイルの一覧を取得。（app.cpp は入れるとエラーになる）
-        if os.path.isfile(d_path) and f[-4:] == '.cpp' and f != 'app.cpp':
+        if os.path.isfile(d_path) and f[-4:] == '.cpp' and 'app' not in f:
             cpps.append(f)
         # 含めたくない場合は、ディレクトリ名の最初に '_' と付けること。
         elif os.path.isdir(d_path) and f[0] != '_' and f[0] != '.':

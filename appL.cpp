@@ -17,7 +17,6 @@ void ext_task(intptr_t exinf) {
 }
 
 
-Block_answer block_ans;
 
 Motor leftWheel(PORT_C);
 Motor rightWheel(PORT_B);
@@ -26,12 +25,9 @@ ColorSensor colorSensor(PORT_2);
 Clock clock;
 
 void main_task(intptr_t unused) {
-    // 【1】 ライントレース
-    
-    // 【2】 ブロック並べ
-
-
     // 【3】 ライントレース
+    Run_RL runner_L;
+    running_L.run_L(&leftWheel, &rightWheel, &colorSensor, &touchSensor);
 
     // 【4】 AIアンサー
     AI_answer ai_ans;

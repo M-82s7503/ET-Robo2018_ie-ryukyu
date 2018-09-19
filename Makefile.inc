@@ -4,25 +4,27 @@ mkfile_path := $(dir $(lastword $(MAKEFILE_LIST)))
 APPL_COBJS +=
 
 APPL_CXXOBJS += \
-    Color_recognition..o \
     Block_answer.o \
+    Color_recognition..o \
     Code_Solve.o \
     Map_Move.o \
     MoveUtil_Block.o \
+    Turn_oneSide.o \
+    Straight.o \
+    Moving.o \
+    Pointers.o \
+    Moving_ex.o \
+    DistMeasure.o \
+    util.o \
+    MoveUtil.o \
     test_main.o \
     answer_arrays.o \
     PatternMatcher.o \
     AI_answer.o \
     Reading_return3.o \
     Reading_seg8.o \
-    Turn_oneSide.o \
-    Straight.o \
-    Moving.o \
-    Pointers.o \
-    Moving_ex.o \
     MoveUtil.o \
-    DistMeasure.o \
-    util.o \
+    Run_RL.o \
     Tracer.o 
 
 
@@ -39,27 +41,35 @@ APPL_DIR += \
     $(mkfile_path)trace \
     $(mkfile_path)core \
     $(mkfile_path)core/move \
-    $(mkfile_path)core/util \
-    $(mkfile_path)core/moving \
-    $(mkfile_path)core/moving_impl \
     $(mkfile_path)ai \
     $(mkfile_path)ai/move \
     $(mkfile_path)ai/analyze \
     $(mkfile_path)ai/analyze/pattern_match \
-    $(mkfile_path)block 
+    $(mkfile_path)coreAPI \
+    $(mkfile_path)coreAPI/move \
+    $(mkfile_path)coreAPI/util \
+    $(mkfile_path)coreAPI/moving \
+    $(mkfile_path)coreAPI/moving_impls \
+    $(mkfile_path)block \
+    $(mkfile_path)block/move \
+    $(mkfile_path)block/analyze 
 
 INCLUDES += \
     -I$(mkfile_path)trace \
     -I$(mkfile_path)core \
     -I$(mkfile_path)core/move \
-    -I$(mkfile_path)core/util \
-    -I$(mkfile_path)core/moving \
-    -I$(mkfile_path)core/moving_impl \
     -I$(mkfile_path)ai \
     -I$(mkfile_path)ai/move \
     -I$(mkfile_path)ai/analyze \
     -I$(mkfile_path)ai/analyze/pattern_match \
-    -I$(mkfile_path)block 
+    -I$(mkfile_path)coreAPI \
+    -I$(mkfile_path)coreAPI/move \
+    -I$(mkfile_path)coreAPI/util \
+    -I$(mkfile_path)coreAPI/moving \
+    -I$(mkfile_path)coreAPI/moving_impls \
+    -I$(mkfile_path)block \
+    -I$(mkfile_path)block/move \
+    -I$(mkfile_path)block/analyze 
 
 
 
