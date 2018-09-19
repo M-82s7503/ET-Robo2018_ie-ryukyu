@@ -3,7 +3,7 @@
 
 
 Tracer::Tracer(Pointers pt_s):
-    Moving_ex(pt_s),
+    Moving(pt_s), To_Vector_IF(),
     distMeasure(pt_s.getLeftWheel(), pt_s.getRightWheel())
 {
     target_val = 11;
@@ -44,12 +44,19 @@ void Tracer::setParam(int pid_pattern) {
     }
 }
 
+
+// オーバーライド
 // run(Enums::Directs LorR, int distance) でも呼び出される。
 void Tracer::setVector(Enums::Directs LorR, int distance) {
     distMeasure.init();
     // 「向き」を指定
     line_side = LorR;
     dist = distance;
+}
+// .run(【方向】, 【距離など】) で一発で実行できるようにしたver.
+void Tracer::run(Enums::Directs direct, int distance) {
+    setVector(direct, distance);
+    Moving::run();
 }
 
 
@@ -65,26 +72,15 @@ float Tracer::calc_pid(int sensor_val) {
     return p+d;
 }
 
-/*
-// ライントレース は基本、線の左側を走るらしいので、それを基準に考える。
-void Tracer::run() {
-    while( 1 ){
-        // line_side で切り替え
-        int left_speed = speed - seigyo;      // <6>
-        int right_speed = speed + seigyo;      // <6>
-    }
-}
-*/
-
-// i がうまくいかなかったのは、 seigyo の +,- が逆だったからでは？
-// 普通、左側にいるなら、左側のタイヤを加速させるものでは？
 
 // +,- を逆にするなら、 decide_pwm_~ のl,r を入れ替えるのが一番楽かも。
 float Tracer::decide_pwm_l() {
     switch (line_side) {
-        case Enums::LEFT:
-            return speed - seigyo;
+//        case Enums::LEFT:
         case Enums::RIGHT:
+            return speed - seigyo;
+//        case Enums::RIGHT:
+        case Enums::LEFT:
             return speed + seigyo;
         default:
             // 明らかにおかしいので、エラー処理
@@ -94,9 +90,11 @@ float Tracer::decide_pwm_l() {
 }
 float Tracer::decide_pwm_r() {
     switch (line_side) {
-        case Enums::LEFT:
-            return speed + seigyo;
+//        case Enums::LEFT:
         case Enums::RIGHT:
+            return speed + seigyo;
+//        case Enums::RIGHT:
+        case Enums::LEFT:
             return speed - seigyo;
         default:
             // 明らかにおかしいので、エラー処理
@@ -109,6 +107,7 @@ float Tracer::decide_pwm_r() {
 bool Tracer::break_condition() {
     int8_t sensor_val = colorSensor->getBrightness();
     seigyo = calc_pid(sensor_val); // <5>
+//    msg_f(sensor_val, 4);
 
     // 【break条件】距離
     if( distMeasure.getNowDist(Enums::LR_AVG) >= dist ) {
@@ -122,16 +121,4 @@ bool Tracer::break_condition() {
     return false;
 }
 
-
-/*
-void Tracer::init() {
-    init_f("Tracer");
-}
-
-void Tracer::terminate() {
-    msg_f("Stopped.", 3);
-    leftWheel.stop();
-    rightWheel.stop();
-}
-*/
 

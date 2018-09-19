@@ -12,7 +12,7 @@ void Run_RL::run_L(
     Tracer tracer(pt_s);
 
     // tracer のテスト
-    tracer.setParam(1);
+/*    tracer.setParam(1);
     tracer.run(Enums::LEFT, 2500);
     tracer.setParam(0);
     tracer.run(Enums::LEFT, 1500);
@@ -22,9 +22,9 @@ void Run_RL::run_L(
     tracer.run(Enums::LEFT, 2000);
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2300);
-    tracer.setParam(0);
+*/    tracer.setParam(0);
     tracer.run(Enums::LEFT, 1000);
-    tracer.stop();
+    //tracer.stop();
 }
 
 

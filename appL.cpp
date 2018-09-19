@@ -1,6 +1,7 @@
 #include "app.h"
+#include "util.h"
+#include "Run_RL.hpp"
 #include "AI_answer.hpp"
-#include "Block_answer.hpp"
 
 using namespace ev3api;
 
@@ -25,9 +26,25 @@ ColorSensor colorSensor(PORT_2);
 Clock clock;
 
 void main_task(intptr_t unused) {
+    /*  スタート処理  */
+    msg_f("to start completed !",0);
+    //ボタンを押したらスタート
+    clock.wait(500);  //入れると安定した。
+    msg_f("waiting...",0);
+    while(1){
+        if (touchSensor.isPressed()) {
+            break;
+        }
+        clock.wait(10);
+    }
+    msg_f("breaked!",0);
+
+
     // 【3】 ライントレース
-    Run_RL runner_L;
+    msg_f("start!", 0);
+    Run_RL running_L;
     running_L.run_L(&leftWheel, &rightWheel, &colorSensor, &touchSensor);
+    msg_f("line trace finished!", 0);
 
     // 【4】 AIアンサー
     AI_answer ai_ans;

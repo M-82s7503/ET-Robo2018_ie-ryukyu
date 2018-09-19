@@ -20,7 +20,7 @@ Moving::Moving(Pointers pt_s):
 
 void Moving::run() {
     while(1){
-        clock.wait(3);
+        //clock.wait(3);
         // break_condition() の T/F が入れ替わったので注意。
         if (break_condition()) {
             break;

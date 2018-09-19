@@ -13,7 +13,6 @@ APPL_CXXOBJS += \
     Straight.o \
     Moving.o \
     Pointers.o \
-    Moving_ex.o \
     DistMeasure.o \
     util.o \
     MoveUtil.o \

@@ -1,6 +1,5 @@
 #include "Pointers.h"
 
-//     Pointers pt_s(l_Wheel, r_Wheel, c_Sensor, t_Sensor);
 Pointers::Pointers(
     Motor* l_Wheel, 
     Motor* r_Wheel, 
@@ -15,10 +14,6 @@ Pointers::Pointers(
 }
 
 
-/*
-Clock getClock() {
-    return clock;
-}*/
 Motor* Pointers::getLeftWheel() {
     return leftWheel;
 }

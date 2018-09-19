@@ -3,7 +3,6 @@
 #include "Motor.h"
 #include "ColorSensor.h"
 #include "TouchSensor.h"
-//#include "Clock.h"
 
 using namespace ev3api;
 
@@ -15,7 +14,6 @@ class Pointers {
       ColorSensor* c_Sensor,
       TouchSensor* t_Sensor
     );
-    //Clock getClock();
     Motor* getLeftWheel();
     Motor* getRightWheel();
     ColorSensor* getColorSensor();
@@ -26,8 +24,6 @@ class Pointers {
     Motor* rightWheel;
     ColorSensor* colorSensor;
     TouchSensor* touchSensor;
-    //const int8_t mThreshold = 20;
-    //const int8_t base_pwm = (Motor::PWM_MAX) / 4;
 };
 
 
