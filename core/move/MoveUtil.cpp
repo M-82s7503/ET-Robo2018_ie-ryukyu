@@ -1,7 +1,7 @@
 /*
 
 2018/09/19
-[ver1.2]
+[ver1.21]
 
 */
 
@@ -24,23 +24,25 @@ void MoveUtil::turn(int degree) {
 
   while (1) {
     msg_f("turn... 13 / 9", 1);
-    //degreeが0以上で右回転、未満で左回転
-    if (degree >= 0){
+    
+    if (endLeftDig < leftWheel.getCount()){
       leftWheel.setPWM(speed);
-      rightWheel.setPWM(-speed);
-      if (leftWheel.getCount() >= endLeftDig){
-        leftWheel.stop();
-        rightWheel.stop();
-        break;
-        }
-    }else{
+    }else if(endLeftDig > leftWheel.getCount()){
       leftWheel.setPWM(-speed);
+    }else{
+      leftWheel.stop();
+    }
+
+    if (endRightDig < rightWheel.getCount()){
       rightWheel.setPWM(speed);
-      if (leftWheel.getCount() <= endLeftDig){
-        leftWheel.stop();
-        rightWheel.stop();
-        break;
-        }
+    }else if(endRightDig > rightWheel.getCount()){
+      rightWheel.setPWM(-speed);
+    }else{
+      rightWheel.stop();
+    }
+
+    if (endLeftDig == leftWheel.getCount() && endRightDig == rightWheel.getCount()){
+      break
     }
   }
 }
@@ -136,11 +138,11 @@ int MoveUtil::to_color_turn(int color){
     if(rightSearch){
       leftWheel.setPWM(speed);
       rightWheel.setPWM(-speed);
-      if(leftWheel.getCount() >= endDig){
+      if(leftWheel.getCount() >= endLeftDig){
         rightSearch = false;
       }
     }else{
-      endDig = startDig - 130;
+      endLeftDig = startLeftDig - 130;
       leftWheel.setPWM(-speed);
       rightWheel.setPWM(speed);
       if(leftWheel.getCount() <= endLeftDig){
