@@ -81,10 +81,10 @@ bool Turn_oneSide::break_condition(){
   // break condition なので。
   switch (which_Wheel) {
     case Enums::LEFT:
-      msg_f( leftWheel->getCount(), 3);
+      //msg_f( leftWheel->getCount(), 3);
       return abs(leftWheel->getCount() - startDig) >= endDig;
     case Enums::RIGHT:
-      msg_f( rightWheel->getCount(), 3);
+      //msg_f( rightWheel->getCount(), 3);
       return abs(rightWheel->getCount() - startDig) >= endDig;
     default:
       // 明らかにおかしいので、エラー処理

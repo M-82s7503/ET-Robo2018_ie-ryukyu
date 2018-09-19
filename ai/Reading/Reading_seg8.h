@@ -33,7 +33,7 @@ class Reading_seg8 : public Moving {
     int* num_img_arr;
     int arr_idx;  // 今回読み取る位置。
     // 配列を描画する用のマップ配列
-    const int mapArr[7] = {7,2,1,6,3,4,5};
+    const int mapArr[7] = {6,1,0,5,2,3,4};
 
     // tmp変数
     float now_dist;

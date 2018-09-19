@@ -1,3 +1,4 @@
+    // インスタンスを作成。
 #include "Run_RL.hpp"
 
 void Run_RL::run_L(
@@ -7,8 +8,6 @@ void Run_RL::run_L(
     TouchSensor* t_Sensor
 ) {
     Pointers pt_s(l_Wheel, r_Wheel, c_Sensor, t_Sensor);
-
-    // インスタンスを作成。
     Tracer tracer(pt_s);
 
     // tracer のテスト

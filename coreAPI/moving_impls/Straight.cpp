@@ -65,8 +65,8 @@ float Straight::decide_pwm_l(){
 
 bool Straight::break_condition(){
   // true の間、走り続ける。
-  msg_f( (leftWheel->getCount()+rightWheel->getCount())/2, 3);
-  msg_f(dist, 4);
+  //msg_f( (leftWheel->getCount()+rightWheel->getCount())/2, 3);
+  //msg_f(dist, 4);
   //clock.wait(2000);
 
   // break condition なので。

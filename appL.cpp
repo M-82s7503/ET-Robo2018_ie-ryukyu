@@ -26,7 +26,12 @@ ColorSensor colorSensor(PORT_2);
 Clock clock;
 
 void main_task(intptr_t unused) {
-    /*  スタート処理  */
+    //###  アームの角度を初期化 → 調整  ###//
+    MoveUtil moveUtil;
+    moveUtil.resetArm();
+    moveUtil.raiseArm(10, 30);
+
+    //###  タッチ スタート  ###//
     msg_f("to start completed !",0);
     //ボタンを押したらスタート
     clock.wait(500);  //入れると安定した。
@@ -37,13 +42,13 @@ void main_task(intptr_t unused) {
         }
         clock.wait(10);
     }
-    msg_f("breaked!",0);
+    //msg_f("breaked!",0);
 
 
     // 【3】 ライントレース
     msg_f("start!", 0);
     Run_RL running_L;
-    running_L.run_L(&leftWheel, &rightWheel, &colorSensor, &touchSensor);
+    //running_L.run_L(&leftWheel, &rightWheel, &colorSensor, &touchSensor);
     msg_f("line trace finished!", 0);
 
     // 【4】 AIアンサー

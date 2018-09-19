@@ -56,7 +56,7 @@ class AI_answer {
     const int img_size_tate = 435;//mm
     const int img_size_yoko = 310;//mm
     const int img_yohaku_tate = 60;
-    const int img_yohaku_yoko = 30;
+    const int img_yohaku_yoko = 40;
     // よく使う値
     int tate_4 = img_size_tate / 4;
     int yoko_2 = img_size_yoko / 2;
@@ -64,5 +64,6 @@ class AI_answer {
     float analog_size_yoko = img_size_yoko - img_yohaku_yoko*2;
 
     /*  機体 の計測データ  */
-    const int sensor_dist = 50;  // (未) タイヤの中心線から、カラーセンサーまでの距離
+    const int sensor_dist = 30;  // (未) タイヤの中心線から、カラーセンサーまでの距離
+    const int tire_dist = 75;
 };

@@ -24,7 +24,12 @@ ColorSensor colorSensor(PORT_2);
 Clock clock;
 
 void main_task(intptr_t unused) {
-        /*  スタート処理  */
+    //###  アームの角度を初期化 → 調整  ###//
+    MoveUtil moveUtil;
+    moveUtil.resetArm();
+    moveUtil.raiseArm(10, 30);
+
+    //###  タッチ スタート  ###//
     msg_f("to start completed !",0);
     //ボタンを押したらスタート
     clock.wait(500);  //入れると安定した。
@@ -35,7 +40,7 @@ void main_task(intptr_t unused) {
         }
         clock.wait(10);
     }
-    msg_f("breaked!",0);
+    //msg_f("breaked!",0);
 
 
     // 【1】 ライントレース

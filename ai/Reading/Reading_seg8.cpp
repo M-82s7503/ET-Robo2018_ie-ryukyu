@@ -38,19 +38,23 @@ bool Reading_seg8::break_condition() {
             // 何もしない。
             // 数字を読み取る前の範囲を移動中に実行される予定。
             // 緑が黒で認識される問題の解決のため。という意味もある。
-            return true;
+            //msg_f("Reading_seg8 case 1",1);
+            return false;
         case 2:
             if (color_tmp == Enums::BLACK) {
                 num_img_arr[arr_idx] = 1;
             }
-            return true;
+            //msg_f("Reading_seg8 case 2",1);
+            return false;
         case 3:
             // 何もしない。
             // 数字を読み取った後の範囲を移動中に実行される予定。
             // 黒（マット）に着いたら止まって欲しいので、止まるようにした。（あくまで保険）
-            return color_tmp != Enums::BLACK;
+            //msg_f("Reading_seg8 case 3",1);
+            return color_tmp == Enums::BLACK;
         default:
-            return false;
+            //msg_f("Reading_seg8 default",1);
+            return true;
     }
 }
 
@@ -58,7 +62,7 @@ int Reading_seg8::posi_type(float dist) {
     // cond_len = 4
     for (int i=0; i<cond_len; i++) {
         if (dist < cond_dists[i]) {
-            // 0:~0,  1:0~10,  2:10~130,  3:130~155
+            // 0:~0,  1:1/6,  2:10~130,  3:130~155
             return i;
         }
     }
@@ -87,7 +91,7 @@ void Reading_seg8::f_write() {
         //clock.sleep(1000);  //画面表示を見やすくするためらしい。
         fprintf(file, "%s", arr);
     }
-    fprintf(file, "}\n\n\n");
+    fprintf(file, "}\n\n");
 
     // わかりやすく書き出し
     for(int i=0; i<7; i++){
@@ -125,11 +129,12 @@ void Reading_seg8::f_write() {
 void Reading_seg8::run(int idx, int distance) {
     arr_idx = idx;
     cond_dists[0] = 0;
-    cond_dists[0] = distance / 6;
-    cond_dists[1] = distance * 5 / 6;
-    cond_dists[2] = distance;
+    cond_dists[1] = distance / 6;
+    cond_dists[2] = distance * 11 / 12;
+    cond_dists[3] = distance;
     // ［？］Straight の break_condition() が呼ばれる可能性が高い...。
     // → その場合は、 Straight からコピペしてくる。Movng_ex を継承するスタイルに変更。
+    distMeasure.init();
     Moving::run();
 }
 

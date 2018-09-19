@@ -25,12 +25,9 @@ void AI_answer::init_arr_all0(float* arr, int arr_size) {
       arr[i] = 0;
     }
 }
-
-
 void AI_answer::init() {
     init_f("AI_answer");
 }
-
 void AI_answer::terminate() {
     msg_f("Stopped.", 1);
     moveUtil.stop();
@@ -54,30 +51,37 @@ void AI_answer::readImg_digital(
     float read_speed = 20;
     Reading_seg8 reading_digital(pt_s, read_speed, num_img_digital);
 
+//    int whites[2] = {Enums::WHITE, Enums::GREY};
+
     // 数字画像まで移動
     straight.run(Enums::FRONT, until_greenMat);
-    moveUtil.to_color(Enums::WHITE);
+    //msg_f("AI_answer to_color(Enums::WHITE);", 1);
+    moveUtil.to_color( static_cast<int>(Enums::WHITE) );
 
-    /**  8の字走行  **/
+    //msg_f("AI_answer 8seg", 1);
+    //###  8の字走行  ##//
     //--  <1> 横・上側  --//
     // 開始位置に移動
-    turn_oneSide.run(Enums::LEFT, -90);
-    straight.run(Enums::FRONT, tate_4);  // 数字の3分の1の長さ
+    moveUtil.turn(-90);
     turn_oneSide.run(Enums::LEFT, 90);
-    // 読み取り実行
-    reading_digital.run(0, yoko_2 - sensor_dist);
+    straight.run(Enums::Directs::BACK, 60);
+    moveUtil.to_color( static_cast<int>(Enums::Colors::BLACK) );
+
+/*    turn_oneSide.run(Enums::LEFT, -90);
+    straight.run(Enums::FRONT, tate_4-tire_dist+10);  // 数字の3分の1の長さ
+    turn_oneSide.run(Enums::LEFT, 90);
+*/    // 読み取り実行
+    reading_digital.run(0, yoko_2);
     reading_digital.run(1, yoko_2);
     //straight.run(Enums::FRONT, img_size_yoko);  // 動きだけテスト で使う。
 
     //--  <2> 横・下側  --//
     // 開始位置に移動
-    moveUtil.to_color(Enums::BLACK);  // 一旦マットに出る。
-    turn_oneSide.run(Enums::RIGHT, 90);
-    straight.run(Enums::FRONT, tate_4/2);  // ［確認］いらないかも？
-    turn_oneSide.run(Enums::RIGHT, Enums::WHITE);  // 白が見えるまで回転。
-    // 読み取り
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );  // 一旦マットに出る。
+    straight.run(Enums::FRONT, sensor_dist);
+    turn_oneSide.run(Enums::RIGHT, 180);  // 白が見えるまで回転。
     // 読み取り実行
-    reading_digital.run(2, yoko_2 - sensor_dist);
+    reading_digital.run(2, yoko_2);
     reading_digital.run(3, yoko_2);
     //straight.run(Enums::FRONT, img_size_yoko);  // 動きだけテスト で使う。
 
@@ -85,23 +89,21 @@ void AI_answer::readImg_digital(
     //--  <3> 縦  --//
     // 開始位置に移動
     // 1回転
-    moveUtil.to_color(Enums::BLACK);  // 一旦マットに出る。
-    turn_oneSide.run(Enums::LEFT, 90);
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );  // 一旦マットに出る。
+    moveUtil.turn(90+10);     // [確認] ズレように値を調整した。
     // 2回転
-    straight.run(Enums::FRONT, tate_4*1.5);
-    turn_oneSide.run(Enums::LEFT, 90);
-    // 3回転
-    straight.run(Enums::FRONT, img_size_yoko/2);
-    turn_oneSide.run(Enums::LEFT, 90);
-    //moveUtil.to_color(Enums::WHITE);  // 多分、ここまでは行かない。
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );
+    turn_oneSide.run(Enums::LEFT, 180);
+    straight.run(Enums::BACK, sensor_dist*1.5);
+    //moveUtil.to_color( static_cast<int>(Enums::WHITE) );  // 多分、ここまでは行かない。
 
     // 読み取り実行
-    reading_digital.run(4, img_size_tate/3 - sensor_dist);
-    reading_digital.run(5, img_size_tate/3);
-    reading_digital.run(6, img_size_tate/3);
+    reading_digital.run(4, img_size_tate*2/5);
+    reading_digital.run(5, img_size_tate*1/5);
+    reading_digital.run(6, img_size_tate*2/5);
     //straight.run(Enums::FRONT, img_size_tate);
 
-    moveUtil.to_color(Enums::BLACK);
+//    moveUtil.to_color( static_cast<int>(Enums::BLACK) );
     straight.stop();
 
     // log 出力
@@ -130,12 +132,12 @@ void AI_answer::readImg_analog(
 
     // 数字画像まで移動
     // 一旦マットに出る。
-    moveUtil.to_color(Enums::BLACK);
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );
     //  ↘︎
     turn_oneSide.run(Enums::LEFT, -90);
     //  ← (アナログ画像のとこまで)
-    moveUtil.to_color(Enums::BLACK);  // デジタル画像 -> マット
-    moveUtil.to_color(Enums::WHITE);  // マット -> アナログ画像
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );  // デジタル画像 -> マット
+    moveUtil.to_color( static_cast<int>(Enums::WHITE) );  // マット -> アナログ画像
 
 
     /**  3return 走行  **/
@@ -143,21 +145,21 @@ void AI_answer::readImg_analog(
     // 開始位置に移動
     straight.run(Enums::FRONT, sensor_dist);
     moveUtil.turn(90);
-    moveUtil.to_color(Enums::BLACK);
-    straight.run(Enums::FRONT, sensor_dist);
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );
+    straight.run(Enums::FRONT, sensor_dist+10);
     moveUtil.turn(-90);
     moveUtil.to_color_turn(Enums::WHITE);  // ズレを修正。回る向きは指定したい。
-    straight.run(Enums::FRONT, img_yohaku_yoko);  // 余白 上側
+    straight.run(Enums::FRONT, img_yohaku_yoko + analog_size_yoko/6);  // 余白 上側
     moveUtil.turn(-90);
-    // 読み取り実行
     straight.run(Enums::FRONT, img_yohaku_tate - sensor_dist);  // 余白 上側
+    // 読み取り実行
     reading_analog.run(1);
     //straight.run(Enums::FRONT, img_size_yoko);  // 動きだけテスト で使う。
 
 // 未
     //--  <2> 横・下側  --//
     // 開始位置に移動
-    moveUtil.to_color(Enums::BLACK);  // 一旦マットに出る。
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );  // 一旦マットに出る。
     turn_oneSide.run(Enums::RIGHT, 90);
     straight.run(Enums::FRONT, tate_4/2);  // ［確認］いらないかも？
     turn_oneSide.run(Enums::RIGHT, Enums::WHITE);  // 白が見えるまで回転。
@@ -169,7 +171,7 @@ void AI_answer::readImg_analog(
 
     //--  <3> 縦  --//
     // 開始位置に移動
-    moveUtil.to_color(Enums::BLACK);  // 一旦マットに出る。
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );  // 一旦マットに出る。
     turn_oneSide.run(Enums::LEFT, 90);
     // ［確認］この辺で ライントレース入れる？
     straight.run(Enums::FRONT, tate_4*1.5);  // 数字の3分の1の長さ
@@ -179,7 +181,7 @@ void AI_answer::readImg_analog(
     straight.run(Enums::FRONT, img_size_yoko/2);
 
     turn_oneSide.run(Enums::LEFT, 90);
-    moveUtil.to_color(Enums::WHITE);
+    moveUtil.to_color( static_cast<int>(Enums::WHITE) );
 
     // 読み取り実行
     reading_analog.run(3);
