@@ -42,7 +42,7 @@ void MoveUtil::turn(int degree) {
     }
 
     if (endLeftDig == leftWheel.getCount() && endRightDig == rightWheel.getCount()){
-      break
+      break;
     }
   }
 }
