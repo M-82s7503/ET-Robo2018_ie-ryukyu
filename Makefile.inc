@@ -38,7 +38,7 @@ endif
 APPL_DIR += \
     $(mkfile_path)trace \
     $(mkfile_path)ai \
-    $(mkfile_path)ai/Reading \
+    $(mkfile_path)ai/reading \
     $(mkfile_path)ai/analyze \
     $(mkfile_path)ai/analyze/pattern_match \
     $(mkfile_path)coreAPI \
@@ -53,7 +53,7 @@ APPL_DIR += \
 INCLUDES += \
     -I$(mkfile_path)trace \
     -I$(mkfile_path)ai \
-    -I$(mkfile_path)ai/Reading \
+    -I$(mkfile_path)ai/reading \
     -I$(mkfile_path)ai/analyze \
     -I$(mkfile_path)ai/analyze/pattern_match \
     -I$(mkfile_path)coreAPI \
