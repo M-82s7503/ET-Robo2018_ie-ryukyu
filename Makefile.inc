@@ -23,7 +23,6 @@ APPL_CXXOBJS += \
     AI_answer.o \
     Reading_return3.o \
     Reading_seg8.o \
-    MoveUtil.o \
     Run_RL.o \
     Tracer.o 
 
@@ -39,8 +38,6 @@ endif
 
 APPL_DIR += \
     $(mkfile_path)trace \
-    $(mkfile_path)core \
-    $(mkfile_path)core/move \
     $(mkfile_path)ai \
     $(mkfile_path)ai/move \
     $(mkfile_path)ai/analyze \
@@ -56,8 +53,6 @@ APPL_DIR += \
 
 INCLUDES += \
     -I$(mkfile_path)trace \
-    -I$(mkfile_path)core \
-    -I$(mkfile_path)core/move \
     -I$(mkfile_path)ai \
     -I$(mkfile_path)ai/move \
     -I$(mkfile_path)ai/analyze \

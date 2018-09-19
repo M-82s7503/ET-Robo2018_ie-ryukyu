@@ -9,8 +9,7 @@
 
 //初期化
 MoveUtil::MoveUtil():
-    leftWheel(PORT_C),rightWheel(PORT_B), 
-    colorSensor(PORT_2)
+    leftWheel(PORT_C),rightWheel(PORT_B),centerArm(PORT_A),colorSensor(PORT_2)
 {
   speed = 20;
 }

@@ -17,8 +17,8 @@ MoveUtil_Block::MoveUtil_Block():
 
 //指定の距離進む                                                                                                                                                       
 void MoveUtil_Block::back(int distance){
-  startDig = leftWheel.getCount();
-  endDig = startDig - (distance * 9 / 8);
+  startLeftDig = leftWheel.getCount();
+  endLeftDig = startLeftDig - (distance * 9 / 8);
 
   while (1) {
     msg_f("straight...", 1);
@@ -27,13 +27,13 @@ void MoveUtil_Block::back(int distance){
 
     //終了判定。前進しているか後進しているかで分岐
     if(distance >=0){
-        if (leftWheel.getCount() >= endDig){
+        if (leftWheel.getCount() >= endLeftDig){
           leftWheel.stop();
           rightWheel.stop();
           break;
         }
     }else{
-        if (leftWheel.getCount() <= endDig){
+        if (leftWheel.getCount() <= endLeftDig){
           leftWheel.stop();
           rightWheel.stop();
           break;
