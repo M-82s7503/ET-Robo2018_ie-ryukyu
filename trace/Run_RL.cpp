@@ -1,12 +1,15 @@
 #include "Run_RL.hpp"
 
-void Run_RL::run_L() {
+void Run_RL::run_L(
+    Motor* l_Wheel,
+    Motor* r_Wheel,
+    ColorSensor* c_Sensor,
+    TouchSensor* t_Sensor
+) {
     Pointers pt_s(l_Wheel, r_Wheel, c_Sensor, t_Sensor);
 
     // インスタンスを作成。
     Tracer tracer(pt_s);
-    Straight straight(pt_s);
-    Turn_oneSide turn_oneSide(pt_s);
 
     // tracer のテスト
     tracer.setParam(1);
@@ -25,6 +28,11 @@ void Run_RL::run_L() {
 }
 
 
-void Run_RL::run_R() {
+void Run_RL::run_R(
+    Motor* l_Wheel,
+    Motor* r_Wheel,
+    ColorSensor* c_Sensor,
+    TouchSensor* t_Sensor
+) {
     
 }
