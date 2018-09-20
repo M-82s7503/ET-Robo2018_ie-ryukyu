@@ -148,7 +148,7 @@ void AI_answer::readImg_analog(
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );
     straight.run(Enums::FRONT, sensor_dist+10);
     moveUtil.turn(-90);
-    moveUtil.to_color_turn(Enums::WHITE);  // ズレを修正。回る向きは指定したい。
+    moveUtil.to_color_turn(Enums::WHITE, 15, 15);  // ズレを修正。回る向きは指定したい。
     straight.run(Enums::FRONT, img_yohaku_yoko + analog_size_yoko/6);  // 余白 上側
     moveUtil.turn(-90);
     straight.run(Enums::FRONT, img_yohaku_tate - sensor_dist);  // 余白 上側

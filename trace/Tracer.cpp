@@ -124,7 +124,7 @@ bool Tracer::break_condition() {
 
 
 void Tracer::calibration(){
-  int list_size = 5;
+  uint8_t list_size = 5;
   while(lowpass_list.size() <= list_size){
     int8_t sensor_val = colorSensor->getBrightness();
 

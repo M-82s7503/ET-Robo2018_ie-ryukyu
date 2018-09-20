@@ -41,7 +41,7 @@ public:
   void straight(int distance);
   void stop();
   void to_color(int color);
-  int to_color_turn(int color);
+  int to_color_turn(int color, int L_dig, int R_dig);
   void resetArm();
   void raiseArm(int degree, int pwm);
   void setSpeed(int a);

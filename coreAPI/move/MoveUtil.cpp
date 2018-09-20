@@ -138,9 +138,10 @@ void MoveUtil::to_color(int color){
 }
 
 //右を90度探してなかったら左を180度探す。成功で1を返す、失敗で0を返す。
-int MoveUtil::to_color_turn(int color){
+// 修正 → 左側に L_dig度、右側に R_dig度、色（color）を 探しに行く。
+int MoveUtil::to_color_turn(int color, int L_dig, int R_dig){
   startLeftDig = leftWheel.getCount();
-  endLeftDig = startLeftDig + 130;
+  endLeftDig = startLeftDig + L_dig;
   rightSearch = true;
 
   while(1) {
@@ -158,11 +159,11 @@ int MoveUtil::to_color_turn(int color){
         rightSearch = false;
       }
     }else{
-      endLeftDig = startLeftDig - 130;
+      endLeftDig = startLeftDig - L_dig;
       leftWheel.setPWM(-speed);
       rightWheel.setPWM(speed);
       if(leftWheel.getCount() <= endLeftDig){
-        turn(90);
+        turn(R_dig);
         return 0;
       }
     }
