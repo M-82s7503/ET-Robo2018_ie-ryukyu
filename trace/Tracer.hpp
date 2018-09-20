@@ -7,6 +7,8 @@
 #include "To_Vector_IF.hpp"
 #include "DistMeasure.h"
 
+#include <list>
+
 using namespace ev3api;
 
 class Tracer : public Moving, public To_Vector_IF {
@@ -20,7 +22,8 @@ class Tracer : public Moving, public To_Vector_IF {
     // LorR：線の右側と左側、どちらを走るかを指定。
     void setVector(Enums::Directs LorR, int distance);
     //void terminate();
-  
+    // キャリブレーション
+    void calibration();
   protected:
     float decide_pwm_l();
     float decide_pwm_r();
@@ -33,7 +36,7 @@ class Tracer : public Moving, public To_Vector_IF {
     DistMeasure distMeasure;
 
     float calc_pid(int sensor_val);
-
+    int8_t calc_lowpass(int8_t brightness);
     // 定数
     float KP, KI, KD, DELTA_T;
     int target_val;
@@ -45,4 +48,6 @@ class Tracer : public Moving, public To_Vector_IF {
     int diff[2];
 
     float seigyo;
+    std::list<int> lowpass_list;
+    int8_t all_avarage;
 };

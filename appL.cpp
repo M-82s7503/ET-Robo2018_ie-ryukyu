@@ -27,10 +27,11 @@ Clock clock;
 
 void main_task(intptr_t unused) {
     //###  アームの角度を初期化 → 調整  ###//
-    MoveUtil moveUtil;
+    /*MoveUtil moveUtil;
     moveUtil.resetArm();
     moveUtil.raiseArm(10, 30);
-
+    */
+  
     //###  タッチ スタート  ###//
     msg_f("to start completed !",0);
     //ボタンを押したらスタート
@@ -48,15 +49,16 @@ void main_task(intptr_t unused) {
     // 【3】 ライントレース
     msg_f("start!", 0);
     Run_RL running_L;
-    //running_L.run_L(&leftWheel, &rightWheel, &colorSensor, &touchSensor);
+    running_L.run_L(&leftWheel, &rightWheel, &colorSensor, &touchSensor);
     msg_f("line trace finished!", 0);
 
+    /*
     // 【4】 AIアンサー
     AI_answer ai_ans;
     ai_ans.init();
     ai_ans.readImg_digital(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
     ai_ans.readImg_analog(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
     ai_ans.terminate();
-    
+    */
     ext_tsk();
 }

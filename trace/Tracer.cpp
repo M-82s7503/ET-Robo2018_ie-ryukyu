@@ -106,7 +106,8 @@ float Tracer::decide_pwm_r() {
 
 bool Tracer::break_condition() {
     int8_t sensor_val = colorSensor->getBrightness();
-    seigyo = calc_pid(sensor_val); // <5>
+    int8_t lowpass = calc_lowpass(sensor_val);
+    seigyo = calc_pid(lowpass); // <5>
 //    msg_f(sensor_val, 4);
 
     // 【break条件】距離
@@ -122,3 +123,35 @@ bool Tracer::break_condition() {
 }
 
 
+void Tracer::calibration(){
+  int list_size = 5;
+  while(lowpass_list.size() <= list_size){
+    int8_t sensor_val = colorSensor->getBrightness();
+
+    lowpass_list.push_back(sensor_val);
+  }
+  int8_t average = 0;
+  for(auto i = lowpass_list.begin(); i != lowpass_list.end(); ++i){
+    average += *i;
+  }
+  msg_f("calibration",1);
+  msg_f(average/list_size, 1);
+  
+  all_avarage = average/list_size;
+}
+
+int8_t Tracer::calc_lowpass(int8_t brightness){
+  /*lowpass_list.pop_front();
+  lowpass_list.push_back(brightness);
+  int8_t avarage = 0;
+
+  for (auto itr = lowpass_list.begin(); itr != lowpass_list.end(); ++itr){
+    avarage += *itr;
+  }
+  */
+  //int8_t avarage = 0;
+  float coefficient = 0.4;
+  all_avarage  = all_avarage *(coefficient) + brightness * (1 - coefficient);
+  
+ return all_avarage;
+}
