@@ -141,7 +141,10 @@ void MoveUtil::to_color(int color){
 // 修正 → 左側に L_dig度、右側に R_dig度、色（color）を 探しに行く。
 int MoveUtil::to_color_turn(int color, int L_dig, int R_dig){
   startLeftDig = leftWheel.getCount();
-  endLeftDig = startLeftDig + L_dig;
+  startLeftDig = rightWheel.getCount();
+  // 前に進む方のタイヤでやりたい。
+  endLeftDig = startLeftDig + R_dig;
+  endRightDig = startRightDig + L_dig;
   rightSearch = true;
 
   while(1) {
@@ -150,20 +153,20 @@ int MoveUtil::to_color_turn(int color, int L_dig, int R_dig){
       leftWheel.stop();
       rightWheel.stop();
       return 1;
-      }
+    }
 
     if(rightSearch){
       leftWheel.setPWM(speed);
       rightWheel.setPWM(-speed);
       if(leftWheel.getCount() >= endLeftDig){
+        turn(R_dig);
         rightSearch = false;
       }
     }else{
-      endLeftDig = startLeftDig - L_dig;
       leftWheel.setPWM(-speed);
       rightWheel.setPWM(speed);
-      if(leftWheel.getCount() <= endLeftDig){
-        turn(R_dig);
+      if(rightWheel.getCount() >= endLeftDig){
+        turn(L_dig);
         return 0;
       }
     }
