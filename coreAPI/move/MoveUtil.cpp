@@ -165,7 +165,7 @@ int MoveUtil::to_color_turn(int color, int L_dig, int R_dig){
     }else{
       leftWheel.setPWM(-speed);
       rightWheel.setPWM(speed);
-      if(rightWheel.getCount() >= endLeftDig){
+      if(rightWheel.getCount() >= endRightDig){
         turn(L_dig);
         return 0;
       }
