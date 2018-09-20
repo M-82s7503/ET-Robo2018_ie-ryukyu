@@ -1,7 +1,7 @@
 /*
 
-2018/09/19
-[ver1.21]
+2018/09/20
+[ver1.3]
 
 */
 
@@ -18,27 +18,27 @@ MoveUtil::MoveUtil():
 void MoveUtil::turn(int degree) {
   startLeftDig = leftWheel.getCount();
   startRightDig = rightWheel.getCount();
-  endLeftDig = startLeftDig + (degree * 13 / 9);  //計算上は、3/2
-  endRightDig = startRightDig - (degree * 13 / 9);
+  endLeftDig = startLeftDig + (degree * 3 / 2);  //計算上は、3/2
+  endRightDig = startRightDig - (degree * 3 / 2);
 
   while (1) {
-    msg_f("turn... 13 / 9", 1);
+    msg_f("turn... 3 / 2", 1);
 
     if (degree>=0){
       leftWheel.setPWM(speed);
       rightWheel.setPWM(-speed);
       if (endLeftDig <= leftWheel.getCount()){leftWheel.stop();}
-      if (endRightDig <= rightWheel.getCount()){rightWheel.stop();}
-      if (endLeftDig <= leftWheel.getCount() && endRightDig <= rightWheel.getCount()){break;}
+      if (endRightDig >= rightWheel.getCount()){rightWheel.stop();}
+      if (endLeftDig <= leftWheel.getCount() && endRightDig >= rightWheel.getCount()){break;}
     }else{
       leftWheel.setPWM(-speed);
       rightWheel.setPWM(speed);
-      if (endLeftDig <= leftWheel.getCount()){leftWheel.stop();}
-      if (endRightDig >= rightWheel.getCount()){rightWheel.stop();}
-      if (endLeftDig <= leftWheel.getCount() && endRightDig <= rightWheel.getCount()){break;}
+      if (endLeftDig >= leftWheel.getCount()){leftWheel.stop();}
+      if (endRightDig <= rightWheel.getCount()){rightWheel.stop();}
+      if (endLeftDig >= leftWheel.getCount() && endRightDig <= rightWheel.getCount()){break;}
     }
 
-    
+
     /*
     if (endLeftDig < leftWheel.getCount()){
       leftWheel.setPWM(speed);
@@ -55,7 +55,7 @@ void MoveUtil::turn(int degree) {
     }else{
       rightWheel.stop();
     }
-    
+
     if (endLeftDig == leftWheel.getCount() && endRightDig == rightWheel.getCount()){
       break;
     }

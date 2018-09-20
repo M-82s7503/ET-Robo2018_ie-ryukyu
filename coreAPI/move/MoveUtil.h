@@ -1,7 +1,7 @@
 /*
 
-2018/09/19
-[ver1.2]
+2018/09/20
+[ver1.3]
 
 */
 
@@ -47,3 +47,4 @@ public:
   void setSpeed(int a);
 };
 #endif  // MOVEUTIL_H_
+
