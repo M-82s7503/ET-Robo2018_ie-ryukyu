@@ -27,15 +27,15 @@ void MoveUtil::turn(int degree) {
     if (degree>=0){
       leftWheel.setPWM(speed);
       rightWheel.setPWM(-speed);
-      if (endLeftDig =< leftWheel.getCount()){leftWheel.stop();}
+      if (endLeftDig <= leftWheel.getCount()){leftWheel.stop();}
       if (endRightDig <= rightWheel.getCount()){rightWheel.stop();}
-      if (endLeftDig =< leftWheel.getCount() && endRightDig <= rightWheel.getCount()){break;}
+      if (endLeftDig <= leftWheel.getCount() && endRightDig <= rightWheel.getCount()){break;}
     }else{
       leftWheel.setPWM(-speed);
       rightWheel.setPWM(speed);
       if (endLeftDig <= leftWheel.getCount()){leftWheel.stop();}
-      if (endRightDig => rightWheel.getCount()){rightWheel.stop();}
-      if (endLeftDig <= leftWheel.getCount() && endRightDig =< rightWheel.getCount()){break;}
+      if (endRightDig >= rightWheel.getCount()){rightWheel.stop();}
+      if (endLeftDig <= leftWheel.getCount() && endRightDig <= rightWheel.getCount()){break;}
     }
 
     
