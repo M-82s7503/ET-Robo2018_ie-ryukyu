@@ -1,6 +1,7 @@
 #include "app.h"
 #include "Run_RL.hpp"
 #include "Block_answer.hpp"
+#include "Parking.h"
 
 using namespace ev3api;
 
@@ -25,31 +26,20 @@ Clock clock;
 
 void main_task(intptr_t unused) {
     //###  アームの角度を初期化 → 調整  ###//
-    MoveUtil moveUtil;
-    moveUtil.resetArm();
-    moveUtil.raiseArm(10, 30);
-
     //###  タッチ スタート  ###//
-    msg_f("to start completed !",0);
-    //ボタンを押したらスタート
-    clock.wait(500);  //入れると安定した。
-    msg_f("waiting...",0);
-    while(1){
-        if (touchSensor.isPressed()) {
-            break;
-        }
-        clock.wait(10);
-    }
-    //msg_f("breaked!",0);
+    Run_RL running_L;
+    running_L.calibration(&touchSensor);
 
-
-    // 【1】 ライントレース
+    //###  【1】 ライントレース  ###//
     Run_RL running_R;
     running_R.run_R(&leftWheel, &rightWheel, &colorSensor, &touchSensor);
 
-    // 【2】 ブロック並べ
+    //###  【2】 ブロック並べ  ###//
     Block_answer block_ans;
     block_ans.run();
+    // 駐車
+    Parking parking;
+    parking.after_Block();
 
     ext_tsk();
 }

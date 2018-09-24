@@ -1,5 +1,27 @@
-    // インスタンスを作成。
 #include "Run_RL.hpp"
+
+
+void Run_RL::calibration(TouchSensor* touchSensor) {
+    Clock clock;
+
+    //###  アームの角度を初期化 → 調整  ###//
+    MoveUtil moveUtil;
+    moveUtil.resetArm();
+    moveUtil.raiseArm(10, 30);
+  
+    //###  タッチ スタート  ###//
+    msg_f("boot completed !",0);
+    //ボタンを押したらスタート
+    clock.wait(500);  //入れると安定した。
+    msg_f("waiting...",0);
+    while(1){
+        if (touchSensor->isPressed()) {
+            break;
+        }
+        clock.wait(10);
+    }
+    //msg_f("breaked!",0);
+}
 
 void Run_RL::run_L(
     Motor* l_Wheel,
@@ -11,7 +33,7 @@ void Run_RL::run_L(
     Tracer tracer(pt_s);
     tracer.calibration();
     // tracer のテスト
-        tracer.setParam(1);
+    tracer.setParam(1);
     tracer.run(Enums::LEFT, 2500);
     tracer.setParam(0);
     tracer.run(Enums::LEFT, 1500);

@@ -9,6 +9,7 @@ APPL_CXXOBJS += \
     Code_Solve.o \
     Map_Move.o \
     MoveUtil_Block.o \
+    Parking.o \
     Turn_oneSide.o \
     Straight.o \
     Moving.o \
@@ -46,6 +47,7 @@ APPL_DIR += \
     $(mkfile_path)coreAPI/util \
     $(mkfile_path)coreAPI/moving \
     $(mkfile_path)coreAPI/moving_impls \
+    $(mkfile_path)parking \
     $(mkfile_path)block \
     $(mkfile_path)block/move \
     $(mkfile_path)block/analyze 
@@ -61,6 +63,7 @@ INCLUDES += \
     -I$(mkfile_path)coreAPI/util \
     -I$(mkfile_path)coreAPI/moving \
     -I$(mkfile_path)coreAPI/moving_impls \
+    -I$(mkfile_path)parking \
     -I$(mkfile_path)block \
     -I$(mkfile_path)block/move \
     -I$(mkfile_path)block/analyze 

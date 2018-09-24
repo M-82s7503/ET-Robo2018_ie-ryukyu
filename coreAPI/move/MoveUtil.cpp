@@ -22,7 +22,7 @@ void MoveUtil::turn(int degree) {
   endRightDig = startRightDig - (degree * 3 / 2);
 
   while (1) {
-    msg_f("turn... 3 / 2", 1);
+    //msg_f("turn... 3 / 2", 1);
 
     if (degree>=0){
       leftWheel.setPWM(speed);
@@ -144,11 +144,18 @@ int MoveUtil::to_color_turn(int color, int L_dig, int R_dig, int nagasi_dig){
   endLeftDig = leftWheel.getCount() + (R_dig * 3 / 2);
   rightSearch = true;
 
+  if (colorSensor.getColorNumber() == color) {
+    //leftWheel.stop();
+    //rightWheel.stop();
+    return 1;
+  }
+
+
   while(1) {
 
     if (colorSensor.getColorNumber() == color) {
-      leftWheel.stop();
-      rightWheel.stop();
+      //leftWheel.stop();
+      //rightWheel.stop();
       break;
     }
 
@@ -175,6 +182,7 @@ int MoveUtil::to_color_turn(int color, int L_dig, int R_dig, int nagasi_dig){
   } else {
     turn(-nagasi_dig);
   }
+  return 1;
 }
 
 

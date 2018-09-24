@@ -1,9 +1,12 @@
 #include "Tracer.hpp"
+#include "MoveUtil.h"
+#include "TouchSensor.h"
 
 using namespace ev3api;
 
 class Run_RL {
   public:
+    void calibration(TouchSensor* touchSensor);
     // Rコースの走行
     void run_R(
         Motor* l_Wheel,
