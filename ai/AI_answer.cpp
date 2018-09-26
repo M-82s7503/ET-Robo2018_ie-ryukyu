@@ -47,6 +47,8 @@ void AI_answer::readImg_digital(
 
     Straight straight(pt_s);
     Turn_oneSide turn_oneSide(pt_s);
+    Turn turn(pt_s);
+    MoveTemps moveTemps(pt_s);
 
     float read_speed = 20;
     Reading_seg8 reading_digital(pt_s, read_speed, num_img_digital);
@@ -102,6 +104,14 @@ void AI_answer::readImg_digital(
     reading_digital.run(5, img_size_tate*1/5);
     reading_digital.run(6, img_size_tate*2/5);
     //straight.run(Enums::FRONT, img_size_tate);
+
+
+    //--  <+α> digital で終わる場合  --//
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );  //一旦マットに出る
+    straight.run(Enums::Directs::FRONT, sensor_dist);
+    turn.to_color_turn(Enums::Colors::WHITE, Enums::Directs::LEFT, 130);
+    moveTemps.ride_onLine(Enums::Directs::FRONT, 100, Enums::Colors::WHITE, Enums::Colors::BLACK);
+
 
 //    moveUtil.to_color( static_cast<int>(Enums::BLACK) );
     straight.stop();

@@ -9,8 +9,11 @@
 
 #include "Reading_seg8.h"
 #include "Reading_return3.h"
-#include "Turn_oneSide.h"
-#include "Straight.h"
+
+//#include "Turn_oneSide.h"
+//#include "Turn.h"
+//#include "Straight.h"
+#include "MoveTemps.h"
 
 using namespace ev3api;
 

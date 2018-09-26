@@ -10,8 +10,10 @@ APPL_CXXOBJS += \
     Map_Move.o \
     MoveUtil_Block.o \
     Parking.o \
+    MoveTemps.o \
     Turn_oneSide.o \
     Straight.o \
+    Turn.o \
     Moving.o \
     Pointers.o \
     DistMeasure.o \

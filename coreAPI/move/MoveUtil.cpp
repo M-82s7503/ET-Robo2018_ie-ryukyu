@@ -224,3 +224,33 @@ void MoveUtil::raiseArm(int degree, int pwm) {
 void MoveUtil::setSpeed(int a){
   this->speed = a;
 }
+
+
+
+void MoveUtil_Block::back(int distance){
+  startLeftDig = leftWheel.getCount();
+  endLeftDig = startLeftDig - (distance * 9 / 8);
+
+  while (1) {
+    msg_f("straight...", 1);
+    leftWheel.setPWM(-speed);
+    rightWheel.setPWM(-speed);
+
+    //終了判定。前進しているか後進しているかで分岐
+    if(distance >=0){
+        if (leftWheel.getCount() >= endLeftDig){
+          leftWheel.stop();
+          rightWheel.stop();
+          break;
+        }
+    }else{
+        if (leftWheel.getCount() <= endLeftDig){
+          leftWheel.stop();
+          rightWheel.stop();
+          break;
+        }
+    }
+  }
+}
+
+
