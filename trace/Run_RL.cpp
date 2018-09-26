@@ -44,7 +44,7 @@ void Run_RL::run_L(
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2300);
     tracer.setParam(0);
-    tracer.run(Enums::LEFT, 1500);
+    tracer.run(Enums::LEFT, 1400);
     tracer.stop();
 
 }
