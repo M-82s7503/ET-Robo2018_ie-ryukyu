@@ -12,6 +12,8 @@
 #include "app.h"
 #include "util.h"
 
+#include <cstdlib>
+
 #include "Motor.h"
 #include "Port.h"
 #include "ColorSensor.h"
@@ -39,6 +41,7 @@ public:
   void turn(int degree);
   void turn(int degree,int side);
   void straight(int distance);
+  void back(int distance);
   void stop();
   void to_color(int color);
   int to_color_turn(int color, int L_dig, int R_dig, int nagasi_dig);

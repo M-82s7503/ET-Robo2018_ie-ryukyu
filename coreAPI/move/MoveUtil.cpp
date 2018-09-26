@@ -1,7 +1,7 @@
 /*
 
 2018/09/20
-[ver1.3]
+[ver1.5]
 
 */
 
@@ -69,7 +69,7 @@ void MoveUtil::turn(int degree,int side) {
 
   while (1) {
     if (side >= 0){
-      msg_f("leftLongTurn...", 1);
+      //msg_f("leftLongTurn...", 1);
       startLeftDig = leftWheel.getCount();
       endLeftDig = startLeftDig + (degree * 3);
       leftWheel.setPWM(speed);
@@ -79,7 +79,7 @@ void MoveUtil::turn(int degree,int side) {
         break;
         }
     }else{
-      msg_f("rightLongTurn...", 1);
+      //msg_f("rightLongTurn...", 1);
       startRightDig = rightWheel.getCount();
       endRightDig = startRightDig + (degree * 3);
       rightWheel.setPWM(speed);
@@ -94,28 +94,29 @@ void MoveUtil::turn(int degree,int side) {
 
 
 //指定の距離進む
+// 9/26 "-"" でバックするように改良。
 void MoveUtil::straight(int distance){
-
   startLeftDig = leftWheel.getCount();
   endLeftDig = startLeftDig + (distance * 9 / 8);
+  speed = speed * (distance / abs(distance));
 
   while (1) {
-  msg_f("straight...", 1);
-  leftWheel.setPWM(speed);
-  rightWheel.setPWM(speed);
+    //msg_f("straight...", 1);
+    leftWheel.setPWM(speed);
+    rightWheel.setPWM(speed);
 
-  //終了判定。前進しているか後進しているかで分岐
-  if(distance >=0){
-    if (leftWheel.getCount() >= endLeftDig){
-        leftWheel.stop();
-        rightWheel.stop();
-        break;
-      }
-    }else{
-      if (leftWheel.getCount() <= endLeftDig){
-        leftWheel.stop();
-        rightWheel.stop();
-        break;
+    //終了判定。前進しているか後進しているかで分岐
+    if(distance >=0){
+      if (leftWheel.getCount() >= endLeftDig){
+          leftWheel.stop();
+          rightWheel.stop();
+          break;
+        }
+      }else{
+        if (leftWheel.getCount() <= endLeftDig){
+          leftWheel.stop();
+          rightWheel.stop();
+          break;
       }
     }
   }
@@ -227,12 +228,12 @@ void MoveUtil::setSpeed(int a){
 
 
 
-void MoveUtil_Block::back(int distance){
+void MoveUtil::back(int distance){
   startLeftDig = leftWheel.getCount();
   endLeftDig = startLeftDig - (distance * 9 / 8);
 
   while (1) {
-    msg_f("straight...", 1);
+    //msg_f("straight...", 1);
     leftWheel.setPWM(-speed);
     rightWheel.setPWM(-speed);
 
