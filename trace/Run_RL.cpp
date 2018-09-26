@@ -20,6 +20,7 @@ void Run_RL::calibration(TouchSensor* touchSensor) {
         }
         clock.wait(10);
     }
+     clock.wait(500);
     //msg_f("breaked!",0);
 }
 
