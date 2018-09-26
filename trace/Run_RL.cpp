@@ -7,7 +7,7 @@ void Run_RL::calibration(TouchSensor* touchSensor) {
     //###  アームの角度を初期化 → 調整  ###//
     MoveUtil moveUtil;
     moveUtil.resetArm();
-    moveUtil.raiseArm(10, 30);
+    moveUtil.raiseArm(42, 30);
   
     //###  タッチ スタート  ###//
     msg_f("boot completed !",0);
@@ -43,10 +43,10 @@ void Run_RL::run_L(
     tracer.run(Enums::LEFT, 2000);
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2300);
-    /*   tracer.setParam(0);
-    tracer.run(Enums::LEFT, 1000);
-    */
+    tracer.setParam(0);
+    tracer.run(Enums::LEFT, 1500);
     tracer.stop();
+
 }
 
 
@@ -56,5 +56,18 @@ void Run_RL::run_R(
     ColorSensor* c_Sensor,
     TouchSensor* t_Sensor
 ) {
-    
+    Pointers pt_s(l_Wheel, r_Wheel, c_Sensor, t_Sensor);
+    Tracer tracer(pt_s);
+    tracer.calibration();
+    // tracer のテスト
+    tracer.setParam(1);
+    tracer.run(Enums::LEFT, 2150);
+    tracer.setParam(0);
+    tracer.run(Enums::LEFT, 5550);
+    tracer.setParam(1);
+    tracer.run(Enums::LEFT, 2300);
+    tracer.setParam(0);
+    tracer.run(Enums::LEFT, 1300);
+    tracer.stop();
+
 }
