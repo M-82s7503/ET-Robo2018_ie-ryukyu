@@ -21,17 +21,17 @@ void Tracer::setParam(int pid_pattern) {
          * を１セットとする。
          */
         case Enums::PID::Slow:  // 遅い
-            speed = (Motor::PWM_MAX) / 4;
-            KP = 0.66;
+            speed = (Motor::PWM_MAX) / 5;
+            KP = 1.20;
             KI = 0.02;
-            KD = 0.54;
+            KD = 0.20;
             DELTA_T = 0.004;
             break;
         case Enums::PID::Midium:  // 中間
             speed = (Motor::PWM_MAX) / 3;
-            KP = 0.66;
+            KP = 0.35;
             KI = 0.02;
-            KD = 0.54;
+            KD = 0.50;
             DELTA_T = 0.004;
             break;
         case Enums::PID::Fast:  // 高速
