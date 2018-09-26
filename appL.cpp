@@ -36,12 +36,14 @@ void main_task(intptr_t unused) {
     running_L.run_L(&leftWheel, &rightWheel, &colorSensor, &touchSensor);
     msg_f("line trace finished!", 0);
 
-    //### 【4】 AIアンサー  ###//
+    //###  【4】 AIアンサー  ###//
     AI_answer ai_ans;
     ai_ans.init();
     ai_ans.readImg_digital(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
     ai_ans.readImg_analog(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
     ai_ans.terminate();
+    // ブロックを動かす
+
     // 駐車
     Parking parking;
     parking.after_AI();
