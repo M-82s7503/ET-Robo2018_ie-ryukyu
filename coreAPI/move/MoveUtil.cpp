@@ -98,12 +98,12 @@ void MoveUtil::turn(int degree,int side) {
 void MoveUtil::straight(int distance){
   startLeftDig = leftWheel.getCount();
   endLeftDig = startLeftDig + (distance * 9 / 8);
-  speed = speed * (distance / abs(distance));
+  int8_t direct = static_cast<int8_t>(distance / abs(distance));
 
   while (1) {
     //msg_f("straight...", 1);
-    leftWheel.setPWM(speed);
-    rightWheel.setPWM(speed);
+    leftWheel.setPWM(direct* speed);
+    rightWheel.setPWM(direct* speed);
 
     //終了判定。前進しているか後進しているかで分岐
     if(distance >=0){
