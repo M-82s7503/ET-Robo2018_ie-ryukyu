@@ -24,18 +24,8 @@ class AI_answer {
   public:
     AI_answer();
     void init();
-    void readImg_digital(
-        Motor* l_Wheel,
-        Motor* r_Wheel,
-        ColorSensor* c_Sensor,
-        TouchSensor* t_Sensor
-    );
-    void readImg_analog(
-        Motor* l_Wheel,
-        Motor* r_Wheel,
-        ColorSensor* c_Sensor,
-        TouchSensor* t_Sensor
-    );
+    void readImg_digital(Pointers* ptrs_p);
+    void readImg_analog(Pointers* ptrs_p);
 
     void answer_forBlock();
     void terminate();

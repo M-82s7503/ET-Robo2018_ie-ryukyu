@@ -7,19 +7,19 @@ MoveTemps::MoveTemps(Motor* l_Wheel, Motor* r_Wheel):
 {}*/
 MoveTemps::MoveTemps(Pointers ptrs):
   distMeasure(ptrs.getLeftWheel(), ptrs.getRightWheel())
+  , clock()
   , mv_basic(ptrs)
   , mv_straight(ptrs)
   , mv_turn(ptrs)
-  , clock()
 {
   colorSensor = ptrs.getColorSensor();
 }
 MoveTemps::MoveTemps(Pointers ptrs, int base_pwm):
   distMeasure(ptrs.getLeftWheel(), ptrs.getRightWheel())
+  , clock()
   , mv_basic(ptrs)
   , mv_straight(ptrs, base_pwm)
   , mv_turn(ptrs, base_pwm)
-  , clock()
 {
   setBase_PWM(base_pwm);
   colorSensor = ptrs.getColorSensor();
@@ -29,7 +29,7 @@ void MoveTemps::setBase_PWM(int base_pwm) {
   speed = base_pwm;
 }
 
-
+/*
 //###  少し複雑な動きを実行  ###//
 // 線（指定した色）の真上に、ロボを乗せる
 // 最初は、 line_c を見つけた状態であるとする。（to_color_turn 実行後）
@@ -52,10 +52,14 @@ void MoveTemps::ride_onLine(Enums::Directs ForB, Enums::Directs first_LorR, int 
 
     against_d = (end_d == Enums::LEFT) ? Enums::RIGHT : Enums::LEFT;
     // 見つからなかった場合は、探索範囲を広げて探す。
+*/
+
 /*    if (!isFound) {
       isFound = searchColor(against_c, Enums::LEFT, 90, 5);
       isFound = searchColor(now_c, Enums::RIGHT, 90, 5);
     }*/
+
+/*
     mv_straight.run(ForB, divide_unit);
     dist -= divide_unit;
   }
@@ -92,7 +96,7 @@ int8_t MoveTemps::searchColor(Enums::Colors color, Enums::Directs first_search_d
   }
   return end_d;
 }
-
+*/
 
 // in_c : ロボがいる側の色（境界にまたがっている場合）。黒線に対して行う場合は、線の色。
 // out_c : ロボがいない側の色（境界にまたがっている場合）。黒線に対して行う場合は、線以外の色。

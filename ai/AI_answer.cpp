@@ -29,29 +29,23 @@ void AI_answer::init() {
     init_f("AI_answer");
 }
 void AI_answer::terminate() {
-    msg_f("Stopped.", 1);
-    moveUtil.stop();
+    msg_f("AI_answer compleated.", 1);
 }
 
 
 
 // 【動き】 デジタル数字カード
-void AI_answer::readImg_digital(
-    Motor* l_Wheel,
-    Motor* r_Wheel,
-    ColorSensor* c_Sensor,
-    TouchSensor* t_Sensor
-) {
+void AI_answer::readImg_digital(Pointers* ptrs_p) {
+    Pointers ptrs(ptrs_p);
 
-    Pointers pt_s(l_Wheel, r_Wheel, c_Sensor, t_Sensor);
-
-    Straight straight(pt_s);
-    Turn_oneSide turn_oneSide(pt_s);
-    Turn turn(pt_s);
-    MoveTemps moveTemps(pt_s);
+    Move_Basic mv_basic(ptrs);
+    Straight straight(ptrs);
+    Turn_oneSide turn_oneSide(ptrs);
+    Turn turn(ptrs);
+    MoveTemps moveTemps(ptrs);
 
     float read_speed = 20;
-    Reading_seg8 reading_digital(pt_s, read_speed, num_img_digital);
+    Reading_seg8 reading_digital(ptrs, read_speed, num_img_digital);
 
 //    int whites[2] = {Enums::WHITE, Enums::GREY};
 
@@ -112,13 +106,13 @@ void AI_answer::readImg_digital(
     straight.run(Enums::Directs::FRONT, sensor_dist-10);
     turn.to_color_turn(Enums::Colors::WHITE, Enums::Directs::LEFT, 130);
     turn.run(Enums::LEFT, 5);  // 確実に、白の枠内に入る。
-    turn.stop();
+    mv_basic.stop();
     // → カード左側
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );  //一旦マットに出る
     straight.run(Enums::Directs::FRONT, sensor_dist-10);
     turn.to_color_turn(Enums::Colors::WHITE, Enums::Directs::LEFT, 130);
     turn.run(Enums::LEFT, 5);  // 確実に、白の枠内に入る。
-    turn.stop();
+    mv_basic.stop();
     moveUtil.to_color(Enums::Colors::BLACK);
     turn.to_color_turn(Enums::Colors::BLACK, Enums::Directs::RIGHT, 90);
 
@@ -127,7 +121,7 @@ void AI_answer::readImg_digital(
     //moveTemps.ride_onLine(Enums::Directs::FRONT, 100, Enums::Colors::WHITE, Enums::Colors::BLACK);
 
 //    moveUtil.to_color( static_cast<int>(Enums::BLACK) );
-    straight.stop();
+    mv_basic.stop();
     // log 出力
     reading_digital.f_write();
 
@@ -152,19 +146,15 @@ void AI_answer::readImg_digital(
 
 
 // 【動き】 アナログ数字カード
-void AI_answer::readImg_analog(
-    Motor* l_Wheel,
-    Motor* r_Wheel,
-    ColorSensor* c_Sensor,
-    TouchSensor* t_Sensor
-) {
-    Pointers pt_s(l_Wheel, r_Wheel, c_Sensor, t_Sensor);
-
-    Straight straight(pt_s);
-    Turn_oneSide turn_oneSide(pt_s);
+void AI_answer::readImg_analog(Pointers* ptrs_p) {
+    Pointers ptrs(ptrs_p);
+    
+    Move_Basic mv_basic(ptrs);
+    Straight straight(ptrs);
+    Turn_oneSide turn_oneSide(ptrs);
 
     float read_speed = 20;
-    Reading_return3 reading_analog(pt_s, read_speed, num_img_analog, analog_size_tate);
+    Reading_return3 reading_analog(ptrs, read_speed, num_img_analog, analog_size_tate);
     
 
     // 数字画像まで移動
@@ -224,7 +214,7 @@ void AI_answer::readImg_analog(
     reading_analog.run(3);
     straight.run(Enums::FRONT, img_size_tate);
 
-    straight.stop();
+    mv_basic.stop();
 
 
     reading_analog.f_write();

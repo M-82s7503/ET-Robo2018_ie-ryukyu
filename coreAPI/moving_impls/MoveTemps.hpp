@@ -20,8 +20,8 @@ class MoveTemps {
 
     //--  実行  --//
     // 線と、ロボの中心線を合わせる。
-    void ride_onLine(Enums::Directs ForB, Enums::Directs first_LorR, int dist, Enums::Colors line_c, Enums::Colors other_c);
-    int8_t searchColor(Enums::Colors color, Enums::Directs first_search_d, int deg, int nagare);
+//    void ride_onLine(Enums::Directs ForB, Enums::Directs first_LorR, int dist, Enums::Colors line_c, Enums::Colors other_c);
+//    int8_t searchColor(Enums::Colors color, Enums::Directs first_search_d, int deg, int nagare);
 
     // 目の前の線に、ちょうど垂直になるように回転する。
     bool ride_onLine_vertical(Enums::Colors in_c, Enums::Directs start_d);

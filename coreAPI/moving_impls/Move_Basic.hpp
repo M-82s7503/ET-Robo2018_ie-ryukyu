@@ -1,3 +1,6 @@
+#ifndef MOVE_BASIC_H_
+#define MOVE_BASIC_H_
+
 #include "Moving.h"
 
 using namespace ev3api;
@@ -24,3 +27,5 @@ class Move_Basic {
     Clock clock;
 
 };
+
+#endif  // MOVE_BASIC_H_

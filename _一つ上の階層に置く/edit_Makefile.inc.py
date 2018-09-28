@@ -1,5 +1,10 @@
 # coding: utf-8
-###  $ python3 edit_Makefile.inc.py 【app名】
+#####
+#  cpp を追加する毎に、Makefile.inc を書き換えるのが面倒だったので作った。
+#  Makefile.inc を自動で書き換えるスクリプト。
+#      $ python3 edit_Makefile.inc.py 【app名】
+#  で実行できる。
+#####
 import os
 import sys
 
