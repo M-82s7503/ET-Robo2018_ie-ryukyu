@@ -16,7 +16,6 @@ class Moving {
   public:
     Moving(Pointers pt_s);
     void run();
-    void stop();
 
   protected:
     // 継承したら、必ず全部実装する。
@@ -24,12 +23,13 @@ class Moving {
     virtual float decide_pwm_l() = 0;
     virtual bool break_condition() = 0;
 
+    Motor* centerArm;
     Motor* leftWheel;
     Motor* rightWheel;
     ColorSensor* colorSensor;
     TouchSensor* touchSensor;
-    Clock clock;
 
+    Clock clock;
 };
 
 

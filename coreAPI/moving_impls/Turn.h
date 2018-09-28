@@ -21,6 +21,14 @@ class Turn : public Moving, public To_Vector_IF, public To_Color_IF {
     bool to_color_turn(Enums::Colors color, Enums::Directs LorR, int deg);
     void setToColor(Enums::Directs LorR, Enums::Colors color);
 
+    // turn なので、両方同じ角度を回ったはず。
+    // なので、両方の回転角の絶対値の平均値を返す。
+    int getTurnedDegree() {
+      int deg_L = abs(stopDeg_L-startLeftDig) *2/3;
+      int deg_R = abs(stopDeg_R-startRightDig) *2/3;
+      return (deg_L + deg_R) /2;
+    }
+    bool getIsFoundColor() { return isFoundColor; }
 
   protected:
     float decide_pwm_r();
@@ -36,6 +44,7 @@ class Turn : public Moving, public To_Vector_IF, public To_Color_IF {
     int deg;
     int startLeftDig, startRightDig;
     int endLeftDig, endRightDig;
+    int stopDeg_L, stopDeg_R;
     // To Vector系 の値の保管
     Enums::Colors till_color;
 

@@ -40,9 +40,10 @@ void main_task(intptr_t unused) {
     AI_answer ai_ans;
     ai_ans.init();
     ai_ans.readImg_digital(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
-    ai_ans.readImg_analog(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
-    ai_ans.terminate();
+//    ai_ans.readImg_analog(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
     // ブロックを動かす
+    ai_ans.answer_forBlock();
+    ai_ans.terminate();
 
     // 駐車
     Parking parking;

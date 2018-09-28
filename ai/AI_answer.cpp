@@ -107,17 +107,44 @@ void AI_answer::readImg_digital(
 
 
     //--  <+α> digital で終わる場合  --//
+    // → カード上側
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );  //一旦マットに出る
-    straight.run(Enums::Directs::FRONT, sensor_dist);
+    straight.run(Enums::Directs::FRONT, sensor_dist-10);
     turn.to_color_turn(Enums::Colors::WHITE, Enums::Directs::LEFT, 130);
-    moveTemps.ride_onLine(Enums::Directs::FRONT, 100, Enums::Colors::WHITE, Enums::Colors::BLACK);
+    turn.run(Enums::LEFT, 5);  // 確実に、白の枠内に入る。
+    turn.stop();
+    // → カード左側
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );  //一旦マットに出る
+    straight.run(Enums::Directs::FRONT, sensor_dist-10);
+    turn.to_color_turn(Enums::Colors::WHITE, Enums::Directs::LEFT, 130);
+    turn.run(Enums::LEFT, 5);  // 確実に、白の枠内に入る。
+    turn.stop();
+    moveUtil.to_color(Enums::Colors::BLACK);
+    turn.to_color_turn(Enums::Colors::BLACK, Enums::Directs::RIGHT, 90);
 
+    // 右に黒を探しに行く。その角度によって、分岐。
+
+    //moveTemps.ride_onLine(Enums::Directs::FRONT, 100, Enums::Colors::WHITE, Enums::Colors::BLACK);
 
 //    moveUtil.to_color( static_cast<int>(Enums::BLACK) );
     straight.stop();
-
     // log 出力
     reading_digital.f_write();
+
+    //--  パターンマッチで、カードの数字を予想  --//
+    PatternMatcher ptMatch;
+    ptMatch.solve_D(num_img_digital);
+
+    // 回答を 2進数に変換した上で、analyze_result に書き込む。
+    int8_t divd_tmp = ptMatch.getAns_D();
+    int8_t rank_tmp = -1;
+    for (int8_t idx=2; idx>=0; idx--) {
+        rank_tmp = divd_tmp % 2;
+        // 2^0 の位は、一番奥（最後）なので、
+        // 最初の余りは、配列の一番最後に入る。
+        analyze_result[0][idx] = rank_tmp;
+        divd_tmp /= 2;
+    }
 
 }
 
@@ -203,3 +230,16 @@ void AI_answer::readImg_analog(
     reading_analog.f_write();
 
 }
+
+
+
+
+
+void AI_answer::answer_forBlock() {
+    Move_block mv_block(analyze_result);
+    mv_block.through();
+    mv_block.by_turn();
+}
+
+
+

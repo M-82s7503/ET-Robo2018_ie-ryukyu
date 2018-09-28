@@ -13,7 +13,10 @@
 //#include "Turn_oneSide.h"
 //#include "Turn.h"
 //#include "Straight.h"
-#include "MoveTemps.h"
+#include "MoveTemps.hpp"
+
+#include "PatternMatcher.hpp"
+#include "Move_block.h"
 
 using namespace ev3api;
 
@@ -33,6 +36,8 @@ class AI_answer {
         ColorSensor* c_Sensor,
         TouchSensor* t_Sensor
     );
+
+    void answer_forBlock();
     void terminate();
 
     // 解析結果を２進数として保存

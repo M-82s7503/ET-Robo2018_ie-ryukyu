@@ -11,6 +11,7 @@ APPL_CXXOBJS += \
     MoveUtil_Block.o \
     Parking.o \
     MoveTemps.o \
+    Move_Basic.o \
     Turn_oneSide.o \
     Straight.o \
     Turn.o \
