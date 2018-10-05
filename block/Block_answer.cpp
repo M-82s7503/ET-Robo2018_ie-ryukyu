@@ -6,13 +6,7 @@ void Block_answer::run() {
 
   code.Solve(solve_num,code_num);
   map.block_jud(solve_num); // 暗号よりブロックの初期配置の計算
-  
-  // ブロックまで移動                                                                                                                                                                                   
-  map.priority_move(&map.move_x,&map.move_y,map.block); // 優先順位決定                                                                                                                                 
-  tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,1); // 目的まで移動                                                                                            
-  map.block[map.car_y][map.car_x] = Map_Move::NO_EXIST; // マップの更新
-                                                                                                                                                                                                     
-        
+                                                                                                     
   while(1) { 
     // ブロックまで移動                                                                                                                                                                
     map.priority_move(&map.move_x,&map.move_y,map.block); // 優先順位決定                                                                                                                     

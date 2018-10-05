@@ -27,13 +27,13 @@ void MoveUtil_Block::back(int distance){
 
     //終了判定。前進しているか後進しているかで分岐
     if(distance >=0){
-        if (leftWheel.getCount() >= endLeftDig){
+        if (leftWheel.getCount() <= endLeftDig){
           leftWheel.stop();
           rightWheel.stop();
           break;
         }
     }else{
-        if (leftWheel.getCount() <= endLeftDig){
+        if (leftWheel.getCount() >= endLeftDig){
           leftWheel.stop();
           rightWheel.stop();
           break;
@@ -56,30 +56,30 @@ void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,in
       if(*car_x < move_x){
 	switch(*car_degree){
 	case 90:
-	  turn(-90);
+	  turn(90);
 	  *car_degree = 0;
 	  break;
 	case 180:
-	  turn(180);
+	  turn(-180);
 	  *car_degree = 0;
 	  break;
 	case 270:
-	  turn(90);
+	  turn(-90);
 	  *car_degree = 0;
 	  break;
 	}
       }else{
 	switch(*car_degree){
 	case 0:
-	  turn(180);
+	  turn(-180);
 	  *car_degree = 180;
 	  break;
 	case 90:
-	  turn(90);
+	  turn(-90);
 	  *car_degree = 180;
 	  break;
 	case 270:
-	  turn(-90);
+	  turn(90);
 	  *car_degree = 180;
 	  break;
 	}
@@ -89,17 +89,21 @@ void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,in
       while(*car_x != move_x){
 	if(*car_x > move_x){
 	  if(block[*car_y][*car_x-1] != AFTER_MOVE_BLOCK){
-	    (*car_x)--;
-	    straight(40);
-	    //to_color(RED);
+	    straight(350);
+            if(*car_y != move_y && (*car_x-1) != move_x){
+              straight(100);
+            }
+            (*car_x)--;
 	  }else{
 	    break;
 	  }
 	}else{ 
 	  if(block[*car_y][*car_x+1] != AFTER_MOVE_BLOCK){
+	    straight(350);
+            if(*car_y != move_y && (*car_x+1) != move_x){
+              straight(100);
+            }
 	    (*car_x)++;
-	    straight(40);
-	    //to_color(RED);
 	  }else{ 
 	    break;
 	  }
@@ -112,30 +116,30 @@ void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,in
       if(*car_y > move_y){
 	switch(*car_degree){
 	case 0:
-	  turn(90);
-	  *car_degree = 90;
-	  break;
-	case 180:
 	  turn(-90);
 	  *car_degree = 90;
 	  break;
+	case 180:
+	  turn(90);
+	  *car_degree = 90;
+	  break;
 	case 270:
-	  turn(180);
+	  turn(-180);
 	  *car_degree = 90;
 	  break;
 	}
       }else if(*car_y < move_y){
 	switch(*car_degree){
 	case 0:
-	  turn(-90);
+	  turn(90);
 	  *car_degree = 270;
 	  break;
 	case 90:
-	  turn(180);
+	  turn(-180);
 	  *car_degree = 270;
 	  break;
 	case 180:
-	  turn(90);
+	  turn(-90);
 	  *car_degree = 270;
 	  break;
 	}
@@ -145,17 +149,21 @@ void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,in
     while(*car_y != move_y){
 	if(*car_y > move_y){
 	  if(block[*car_y-1][*car_x] != AFTER_MOVE_BLOCK){
+	    straight(300);
+	    if((*car_y+1) != move_y && *car_x != move_x){
+              straight(100);
+            }
 	    (*car_y)--;
-	    straight(35);
-	    //to_color(RED);
 	  }else{
 	    break;
 	  }
 	}else{
 	  if(block[*car_y+1][*car_x] != AFTER_MOVE_BLOCK){
+	    straight(300);
+	    if((*car_y+1) != move_y && *car_x != move_x){
+              straight(100);
+            }
 	    (*car_y)++;
-	    straight(35);
-	    //to_color(RED);
 	  }else{
 	    break;
 	  }
@@ -180,19 +188,19 @@ void MoveUtil_Block::back_move(int car_degree,int* car_x,int* car_y){
   switch(car_degree){
   case 0:
     (*car_x)--;
-    back(450);
+    back(420);
     break;
   case 90:
     (*car_y)++;
-    back(420);
+    back(360);
     break;
   case 180:
     (*car_x)++;
-    back(450);
+    back(420);
     break;
   case 270:
     (*car_y)--;
-    back(420);
+    back(360);
     break;
   }
 
@@ -236,12 +244,23 @@ void MoveUtil_Block::pid_straight(int distance){
 
 /* 引数によって機体のハンドを動かす */
 void MoveUtil_Block::hand_move(int jud){
-  while(1){                                                                                                                                                                                 
-    handWheel.setPWM(jud);                                                                                                                                                                            
-    msg_f(handWheel.getCount(), 3);                                                                                                                                                                   
-    if(handWheel.getCount() > 60){                                                                                                                                                                    
-      handWheel.stop();  
-      break;                                                                                                                                                                                           
-    }                                                                                                                                                                                                  
-  }         
+
+  while(1){
+    if(jud != 0){
+      if(jud == 1){
+        handWheel.setPWM(2);
+        if(handWheel.getCount() > 60){
+          handWheel.stop();
+          break;
+        }
+      }else if(jud == -1){
+        handWheel.setPWM(-2);
+        if(handWheel.getCount() < -10){
+          handWheel.stop();
+          break;
+        }
+      }
+    }
+  }
+  
 }
