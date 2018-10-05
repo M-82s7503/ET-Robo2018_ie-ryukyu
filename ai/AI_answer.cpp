@@ -53,20 +53,24 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
     straight.run(Enums::FRONT, until_greenMat);
     //msg_f("AI_answer to_color(Enums::WHITE);", 1);
     moveUtil.to_color( static_cast<int>(Enums::WHITE) );
+//    straight.run(Enums::Colors::BLACK, Enums::Directs::FRONT, 500);
 
     //msg_f("AI_answer 8seg", 1);
-    //###  8の字走行  ##//
+    //###  8の字走行  ###//
     //--  <1> 横・上側  --//
     // 開始位置に移動
     moveUtil.turn(-90);
     turn_oneSide.run(Enums::LEFT, 90);
     straight.run(Enums::Directs::BACK, 60);
     moveUtil.to_color( static_cast<int>(Enums::Colors::BLACK) );
+    // テスト待ち
+//    straight.run(Enums::Colors::BLACK, Enums::Directs::FRONT,30);
 
-/*    turn_oneSide.run(Enums::LEFT, -90);
-    straight.run(Enums::FRONT, tate_4-tire_dist+10);  // 数字の3分の1の長さ
-    turn_oneSide.run(Enums::LEFT, 90);
-*/    // 読み取り実行
+// 旧版
+//    turn_oneSide.run(Enums::LEFT, -90);
+//    straight.run(Enums::FRONT, tate_4-tire_dist+10);  // 数字の3分の1の長さ
+//    turn_oneSide.run(Enums::LEFT, 90);
+    // 読み取り実行
     reading_digital.run(0, yoko_2);
     reading_digital.run(1, yoko_2);
     //straight.run(Enums::FRONT, img_size_yoko);  // 動きだけテスト で使う。
@@ -76,6 +80,9 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );  // 一旦マットに出る。
     straight.run(Enums::FRONT, sensor_dist);
     turn_oneSide.run(Enums::RIGHT, 180);  // 白が見えるまで回転。
+    // (未テスト) ズレ調整
+    straight.run(Enums::Directs::FRONT, 30);
+    moveTemps.ride_onLine_vertical(Enums::Colors::BLACK, Enums::Directs::LEFT);
     // 読み取り実行
     reading_digital.run(2, yoko_2);
     reading_digital.run(3, yoko_2);
@@ -86,12 +93,14 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
     // 開始位置に移動
     // 1回転
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );  // 一旦マットに出る。
-    moveUtil.turn(90+10);     // [確認] ズレように値を調整した。
+//    moveUtil.turn(90+10);     // [確認] ズレように値を調整した。
+    turn.run(Enums::Directs::RIGHT, 90);
     // 2回転
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );
     turn_oneSide.run(Enums::LEFT, 180);
     straight.run(Enums::BACK, sensor_dist*1.5);
     //moveUtil.to_color( static_cast<int>(Enums::WHITE) );  // 多分、ここまでは行かない。
+    moveTemps.ride_onLine_vertical(Enums::Colors::BLACK, Enums::Directs::RIGHT);
 
     // 読み取り実行
     reading_digital.run(4, img_size_tate*2/5);
@@ -101,28 +110,35 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
 
 
     //--  <+α> digital で終わる場合  --//
-    // → カード上側
+    // カード上側
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );  //一旦マットに出る
-    straight.run(Enums::Directs::FRONT, sensor_dist-10);
-    turn.to_color_turn(Enums::Colors::WHITE, Enums::Directs::LEFT, 130);
+    straight.run(Enums::Directs::FRONT, sensor_dist-15);
+    // カード上側 → カード左側
+    turn.to_color_turn(Enums::Colors::WHITE, Enums::Directs::LEFT, 120);
     turn.run(Enums::LEFT, 5);  // 確実に、白の枠内に入る。
     mv_basic.stop();
-    // → カード左側
+    // カード左側（アナログもやる場合は、こっちもやる）
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );  //一旦マットに出る
-    straight.run(Enums::Directs::FRONT, sensor_dist-10);
-    turn.to_color_turn(Enums::Colors::WHITE, Enums::Directs::LEFT, 130);
+    straight.run(Enums::Directs::FRONT, sensor_dist-15);
+    // カード左側 → カード下側
+    turn.to_color_turn(Enums::Colors::WHITE, Enums::Directs::LEFT, 120);
     turn.run(Enums::LEFT, 5);  // 確実に、白の枠内に入る。
     mv_basic.stop();
     moveUtil.to_color(Enums::Colors::BLACK);
-    turn.to_color_turn(Enums::Colors::BLACK, Enums::Directs::RIGHT, 90);
 
-    // 右に黒を探しに行く。その角度によって、分岐。
-
-    //moveTemps.ride_onLine(Enums::Directs::FRONT, 100, Enums::Colors::WHITE, Enums::Colors::BLACK);
-
-//    moveUtil.to_color( static_cast<int>(Enums::BLACK) );
+    // 右に黒を探しに行く。そこでズレ修正。
+    turn.run(Enums::Directs::RIGHT, 100);
+    moveUtil.to_color(Enums::Colors::BLACK);
+    straight.run(Enums::Directs::FRONT, sensor_dist/2);
+    moveTemps.ride_onLine_vertical(Enums::Colors::WHITE, Enums::LEFT);
+    straight.run(Enums::Directs::BACK, sensor_dist/3);
+    turn.run(Enums::Directs::LEFT, 90);
+    // マットに出て終了。
+    moveUtil.to_color( static_cast<int>(Enums::BLACK) );
+    straight.run(Enums::Directs::FRONT, sensor_dist/2);
     mv_basic.stop();
-    // log 出力
+
+    //--  log 出力  --//
     reading_digital.f_write();
 
     //--  パターンマッチで、カードの数字を予想  --//
@@ -227,7 +243,7 @@ void AI_answer::readImg_analog(Pointers* ptrs_p) {
 
 void AI_answer::answer_forBlock() {
     Move_block mv_block(analyze_result);
-    mv_block.through();
+//    mv_block.through();
     mv_block.by_turn();
 }
 

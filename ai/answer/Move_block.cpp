@@ -31,13 +31,13 @@ Move_block::Move_block(int analyze_result[2][3]):
 }
 
 //int answer[2][3] =    {{0, 1, 1},{0, 1 ,0}};
-int j;
+//int j;
 const int duration = 2000;
 const int sens_dist = 45;
 
 
 
-void Move_block::Decision_Left(int i)
+void Move_block::Decision_Left(int j)
 {
 	if(answer[0][j] == 0)
     {
@@ -62,7 +62,7 @@ void Move_block::Decision_Left(int i)
         }
 }
 
-void Move_block::Decision_Right(int i)
+void Move_block::Decision_Right(int j)
 {
 	if(answer[1][j] == 0)
     {

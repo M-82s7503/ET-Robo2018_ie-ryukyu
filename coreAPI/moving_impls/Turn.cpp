@@ -30,16 +30,16 @@ void Turn::setVector(Enums::Directs LorR, int degree) {
     int8_t pl_mi_L = 0
         , pl_mi_R = 0;
     switch (LorR) {
-        case Enums::Directs::LEFT:
-            pl_mi_L = -1;
-            pl_mi_R = 1;
-            break;
-        case Enums::Directs::RIGHT:
-            pl_mi_L = 1;
-            pl_mi_R = -1;
-            break;
-        default:// 明らかにおかしいので、エラー処理
-            msg_f("direct error", 2);
+      case Enums::Directs::LEFT:
+        pl_mi_L = -1;
+        pl_mi_R = 1;
+        break;
+      case Enums::Directs::RIGHT:
+        pl_mi_L = 1;
+        pl_mi_R = -1;
+        break;
+      default:// 明らかにおかしいので、エラー処理
+        msg_f("direct error", 2);
     }
     endLeftDig = startLeftDig + pl_mi_L * (deg * 3 / 2);    //計算上は、3/2
     endRightDig = startRightDig + pl_mi_R * (deg * 3 / 2);
@@ -84,30 +84,30 @@ bool Turn::to_color_turn(Enums::Colors color, Enums::Directs LorR, int degree) {
 float Turn::decide_pwm_r(){
     if (isToColor_mode) {
         switch (direct) {
-            case Enums::Directs::LEFT:
-                return speed;
-            case Enums::Directs::RIGHT:
-                return -speed;
-            default:
-                // 明らかにおかしいので、エラー処理
-                return 0;
+          case Enums::Directs::LEFT:
+            return speed;
+          case Enums::Directs::RIGHT:
+            return -speed;
+          default:
+            // 明らかにおかしいので、エラー処理
+            return 0;
         }
     } else {
         switch (direct) {
-            case Enums::Directs::LEFT:
-                // ズレた場合は、とりあえず止める。
-                if (endRightDig <= rightWheel->getCount()){
-                    rightWheel->stop();
-                    return 0;
-                } else return speed;    //右タイヤは、左回転の時＋。
-            case Enums::Directs::RIGHT:
-                if (endRightDig >= rightWheel->getCount()){
-                    rightWheel->stop();
-                    return 0;
-                } else return -speed;
-            default:
-                // 明らかにおかしいので、エラー処理
+          case Enums::Directs::LEFT:
+            // ズレた場合は、とりあえず止める。
+            if (endRightDig <= rightWheel->getCount()){
+                rightWheel->stop();
                 return 0;
+            } else return speed;    //右タイヤは、左回転の時＋。
+          case Enums::Directs::RIGHT:
+            if (endRightDig >= rightWheel->getCount()){
+                rightWheel->stop();
+                return 0;
+            } else return -speed;
+          default:
+            // 明らかにおかしいので、エラー処理
+            return 0;
         }
     }
 }
@@ -115,29 +115,29 @@ float Turn::decide_pwm_r(){
 float Turn::decide_pwm_l(){
     if (isToColor_mode) {
         switch (direct) {
-            case Enums::Directs::LEFT:
-                return -speed;
-            case Enums::Directs::RIGHT:
-                return speed;
-            default:
-                // 明らかにおかしいので、エラー処理
-                return 0;
+          case Enums::Directs::LEFT:
+            return -speed;
+          case Enums::Directs::RIGHT:
+            return speed;
+          default:
+            // 明らかにおかしいので、エラー処理
+            return 0;
         }
     } else {
         switch (direct) {
-            case Enums::Directs::LEFT:
-                if (endLeftDig >= leftWheel->getCount()){
-                    leftWheel->stop();
-                    return 0;
-                } else return -speed;
-            case Enums::Directs::RIGHT:
-                if (endLeftDig <= leftWheel->getCount()){
-                    leftWheel->stop();
-                    return 0;
-                } else return speed;
-            default:
-                // 明らかにおかしいので、エラー処理
+          case Enums::Directs::LEFT:
+            if (endLeftDig >= leftWheel->getCount()){
+                leftWheel->stop();
                 return 0;
+            } else return -speed;
+          case Enums::Directs::RIGHT:
+            if (endLeftDig <= leftWheel->getCount()){
+                leftWheel->stop();
+                return 0;
+            } else return speed;
+          default:
+            // 明らかにおかしいので、エラー処理
+            return 0;
         }
     }
 }
@@ -155,25 +155,25 @@ bool Turn::break_condition(){
     } 
     if (isToColor_mode || !isToColor_mode) {
         switch (direct) {
-            case Enums::Directs::LEFT:
-                if (endLeftDig >= leftWheel->getCount() && endRightDig <= rightWheel->getCount()){
-                    // 終了角を記録する。
-                    stopDeg_L = leftWheel->getCount();
-                    stopDeg_R = rightWheel->getCount();
-                    return true;
-                } else return false;
-            case Enums::Directs::RIGHT:
-                if (endLeftDig <= leftWheel->getCount() && endRightDig >= rightWheel->getCount()){
-                    // 終了角を記録する。
-                    stopDeg_L = leftWheel->getCount();
-                    stopDeg_R = rightWheel->getCount();
-                    return true;
-                } else return false;
-            default:
-                // 明らかにおかしいので、エラー処理
-                msg_f("", 2);
-                msg_f("Turn direct Error", 2);
+          case Enums::Directs::LEFT:
+            if (endLeftDig >= leftWheel->getCount() && endRightDig <= rightWheel->getCount()){
+                // 終了角を記録する。
+                stopDeg_L = leftWheel->getCount();
+                stopDeg_R = rightWheel->getCount();
                 return true;
+            } else return false;
+          case Enums::Directs::RIGHT:
+            if (endLeftDig <= leftWheel->getCount() && endRightDig >= rightWheel->getCount()){
+                // 終了角を記録する。
+                stopDeg_L = leftWheel->getCount();
+                stopDeg_R = rightWheel->getCount();
+                return true;
+            } else return false;
+          default:
+            // 明らかにおかしいので、エラー処理
+            msg_f("", 2);
+            msg_f("Turn direct Error", 2);
+            return true;
         }
     }
 }
