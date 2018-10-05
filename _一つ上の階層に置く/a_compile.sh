@@ -19,6 +19,6 @@ if [ $# -eq 2 ]; then
     mv "$1/app.cpp" "$1/app$2.cpp" 
 fi
 
-mv 'app' "$1_app"
+mv 'app' "$1_app$2"
 echo
-echo "$1_app"
+echo "$1_app$2"

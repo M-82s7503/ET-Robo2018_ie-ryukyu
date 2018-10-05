@@ -11,10 +11,11 @@ public:
     void solve_D(const int* read_img);
     void solve_A(const float* read_img);
 
-    int getAns_D() {
+    // 予想した数字（のゲッター）
+    int8_t getAns_D() {
         return ans_D;
     }
-    int getAns_A() {
+    int8_t getAns_A() {
         return ans_A;
     }
     
@@ -28,6 +29,6 @@ public:
     bool is100per;
 
 private:
-    int ans_D;
-    int ans_A;
+    int8_t ans_D;
+    int8_t ans_A;
 };

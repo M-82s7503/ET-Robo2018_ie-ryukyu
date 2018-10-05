@@ -18,6 +18,7 @@ void ext_task(intptr_t exinf) {
 }
 
 
+Motor centerArm(PORT_A);
 Motor leftWheel(PORT_C);
 Motor rightWheel(PORT_B);
 TouchSensor touchSensor(PORT_1);
@@ -25,14 +26,15 @@ ColorSensor colorSensor(PORT_2);
 Clock clock;
 
 void main_task(intptr_t unused) {
+    Pointers ptrs(&centerArm, &leftWheel, &rightWheel, &colorSensor, &touchSensor);
     //###  アームの角度を初期化 → 調整  ###//
     //###  タッチ スタート  ###//
     Run_RL running_L;
-    running_L.calibration(&touchSensor);
+    running_L.calibration(&ptrs);
 
     //###  【1】 ライントレース  ###//
     Run_RL running_R;
-    running_R.run_R(&leftWheel, &rightWheel, &colorSensor, &touchSensor);
+    running_R.run_R(&ptrs);
 
     //###  【2】 ブロック並べ  ###//
     Block_answer block_ans;

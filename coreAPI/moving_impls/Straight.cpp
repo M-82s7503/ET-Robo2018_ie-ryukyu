@@ -25,17 +25,41 @@ void Straight::setVector(Enums::Directs ForB, int distance) {
   distMeasure.init();
   // 「向き」を指定
   direct = ForB;
-  dist = distance;
+  dist = abs(distance);
 }
 // .run(【方向】, 【距離など】) で一発で実行できるようにしたver.
 void Straight::run(Enums::Directs ForB, int distance) {
     setVector(ForB, distance);
+    isToColor_mode = false;
     Moving::run();
 }
 
 
+// オーバーライドする。
+void Straight::setToColor(Enums::Directs ForB, Enums::Colors color) {
+    till_color = color;
+
+    // param の処理
+
+    // break_condision() でフラグ処理する。
+}
+// to_color の .run()
+void Straight::run(Enums::Colors to_c, Enums::Directs ForB, int distance) {
+    setVector(ForB, distance);
+    setToColor(ForB, to_c);
+    isToColor_mode = true;
+    isFoundColor = false;
+    Moving::run();
+}
+
 
 float Straight::decide_pwm_r(){
+  // 左右の誤差を補正する。
+  // 速い方の車輪の反対側に寄ってしまうが、移動後の角度誤差は最小限になるはず。
+  if (dist < distMeasure.getNowDist(Enums::Directs::RIGHT)){
+      rightWheel->stop();
+      return 0;
+  }
   switch (direct) {
     case Enums::FRONT:
       return speed;
@@ -50,6 +74,12 @@ float Straight::decide_pwm_r(){
 }
 
 float Straight::decide_pwm_l(){
+  // 左右の誤差を補正する。
+  // 速い方の車輪の反対側に寄ってしまうが、移動後の角度誤差は最小限になるはず。
+  if (dist < distMeasure.getNowDist(Enums::Directs::LEFT)){
+      leftWheel->stop();
+      return 0;
+  }
   switch (direct) {
     case Enums::FRONT:
       return speed;
@@ -65,11 +95,15 @@ float Straight::decide_pwm_l(){
 
 bool Straight::break_condition(){
   // true の間、走り続ける。
-  //msg_f( (leftWheel->getCount()+rightWheel->getCount())/2, 3);
-  //msg_f(dist, 4);
-  //clock.wait(2000);
-
   // break condition なので。
+  if (isToColor_mode) {
+    if (colorSensor->getColorNumber() == static_cast<int>(till_color)) {
+        isFoundColor = true;
+        // breakする。
+        return true;
+    }
+  }
+  // To Color の場合でも、制限距離になったら、終了。
   return distMeasure.getNowDist(Enums::LR_AVG) >= dist;
 }
 

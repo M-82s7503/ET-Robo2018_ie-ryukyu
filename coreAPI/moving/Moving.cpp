@@ -11,6 +11,7 @@
 Moving::Moving(Pointers pt_s):
   clock()
 {
+    centerArm = pt_s.getCenterArm();
     leftWheel = pt_s.getLeftWheel();
     rightWheel = pt_s.getRightWheel();
     colorSensor = pt_s.getColorSensor();
@@ -33,14 +34,5 @@ void Moving::run() {
     }
     // break で抜けるだけなので、回転し続けることに注意。
     // 止めたい場合は、 .stop() を呼ぶこと。
-}
-
-
-
-void Moving::stop() {
-    //leftWheel.stop();
-    //rightWheel.stop();
-    leftWheel->stop();
-    rightWheel->stop();
 }
 

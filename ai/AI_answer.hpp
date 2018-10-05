@@ -9,8 +9,14 @@
 
 #include "Reading_seg8.h"
 #include "Reading_return3.h"
-#include "Turn_oneSide.h"
-#include "Straight.h"
+
+//#include "Turn_oneSide.h"
+//#include "Turn.h"
+//#include "Straight.h"
+#include "MoveTemps.hpp"
+
+#include "PatternMatcher.hpp"
+#include "Move_block.h"
 
 using namespace ev3api;
 
@@ -18,18 +24,10 @@ class AI_answer {
   public:
     AI_answer();
     void init();
-    void readImg_digital(
-        Motor* l_Wheel,
-        Motor* r_Wheel,
-        ColorSensor* c_Sensor,
-        TouchSensor* t_Sensor
-    );
-    void readImg_analog(
-        Motor* l_Wheel,
-        Motor* r_Wheel,
-        ColorSensor* c_Sensor,
-        TouchSensor* t_Sensor
-    );
+    void readImg_digital(Pointers* ptrs_p);
+    void readImg_analog(Pointers* ptrs_p);
+
+    void answer_forBlock();
     void terminate();
 
     // 解析結果を２進数として保存
@@ -52,6 +50,7 @@ class AI_answer {
     /*  コース の計測データ  */
     // 灰色の終点から緑まで
     const int until_greenMat = 400; // 27+13
+    Enums::Colors greenMat_c = Enums::Colors::BLACK;
     /*  数字カード の計測データ  */
     const int img_size_tate = 435;//mm
     const int img_size_yoko = 310;//mm
