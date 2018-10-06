@@ -106,8 +106,8 @@ float Tracer::decide_pwm_r() {
 
 bool Tracer::break_condition() {
     int8_t sensor_val = colorSensor->getBrightness();
-    int8_t lowpass = calc_lowpass(sensor_val);
-    seigyo = calc_pid(lowpass); // <5>
+    //int8_t lowpass = calc_lowpass(sensor_val);
+    seigyo = calc_pid(sensor_val); // <5>
 //    msg_f(sensor_val, 4);
 
     // 【break条件】距離
