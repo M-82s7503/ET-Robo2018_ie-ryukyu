@@ -50,7 +50,9 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
 //    int whites[2] = {Enums::WHITE, Enums::GREY};
 
     // 数字画像まで移動
-//    straight.run(Enums::FRONT, until_greenMat);
+    mv_basic.raiseArm(30, 30);
+    mv_basic.stop();
+    straight.run(Enums::FRONT, until_greenMat);
     //msg_f("AI_answer to_color(Enums::WHITE);", 1);
     moveUtil.to_color( static_cast<int>(Enums::WHITE) );
 //    straight.run(Enums::Colors::BLACK, Enums::Directs::FRONT, 500);
@@ -62,8 +64,10 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
     moveUtil.turn(-90);
     turn_oneSide.run(Enums::LEFT, 90);
     straight.setBase_PWM(10);
-    straight.run(Enums::Directs::BACK, 60);
+    straight.run(Enums::Directs::BACK, 90);
+    mv_basic.stop();
     moveUtil.to_color( static_cast<int>(Enums::Colors::BLACK) );
+    mv_basic.stop();
     // テスト待ち
 //    straight.run(Enums::Colors::BLACK, Enums::Directs::FRONT,30);
 

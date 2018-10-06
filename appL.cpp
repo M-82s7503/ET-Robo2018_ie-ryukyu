@@ -41,14 +41,14 @@ void main_task(intptr_t unused) {
     AI_answer ai_ans;
     ai_ans.init();
     ai_ans.readImg_digital(&ptrs);  // ;走行
-//    ai_ans.readImg_analog(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
+    ai_ans.readImg_analog(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
     // ブロックを動かす
     ai_ans.answer_forBlock();
     ai_ans.terminate();
 
     // 駐車
-//    Parking parking;
-//    parking.after_AI();
+    Parking parking;
+    parking.after_AI();
 
     ext_tsk();
 }
