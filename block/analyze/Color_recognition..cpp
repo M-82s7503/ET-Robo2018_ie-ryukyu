@@ -16,7 +16,7 @@ void Color_recognition::GetColor()
 // 判別した色をLCDに表示
 int Color_recognition::OutputColor()
 {
-
+  box = colorSensor.getColorNumber(); 
   switch(box){
   case NONE:
     msg_f("None...", 1); // LCDに出力
