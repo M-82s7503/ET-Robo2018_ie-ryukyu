@@ -29,7 +29,7 @@ void Block_answer::run() {
     tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,1); // 目的まで移動                                                                             
     map.block[map.car_y][map.car_x] = Map_Move::NO_EXIST; // マップの更新                                                                                                                                             
     // ブロックを指定の位置まで移動させる 
-    if(color.OutputColor() != 0){                                                                                                                           
+    if(color.OutputColor() != 0 && color.OutputColor() != 1 && color.OutputColor() != 6){                                                                                                                           
       map.move_point(color.OutputColor(),&map.move_x,&map.move_y,map.block); // ブロックの色により向かう場所の決定                         
     }else{
       map.move_point(a[k],&map.move_x,&map.move_y,map.block); // ブロックの色により向かう場所の決定                         
