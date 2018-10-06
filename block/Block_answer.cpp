@@ -60,8 +60,20 @@ void Block_answer::run() {
    
 
   }
+
     
   tai.purpose_move(&map.car_x,&map.car_y,3,2,&map.car_degree,map.block,1); // 目的まで移動                                                                             
+  switch(tai.car_degree){
+  case 90:
+    tai.turn(90);
+    break;
+  case 180:
+    tai.turn(-180);
+    break;
+  case 270:
+    tai.turn(-90);
+    break;
+  }
   msg_f("Stopped.", 1);
 
 
