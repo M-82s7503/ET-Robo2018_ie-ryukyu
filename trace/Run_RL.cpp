@@ -63,7 +63,8 @@ void Run_RL::run_R(Pointers* ptrs_p) {
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2300);
     tracer.setParam(0);
-    tracer.run(Enums::LEFT, 1550);
+    tracer.run(Enums::LEFT, 2250);
+
     mv_basic.stop();
 
 }
