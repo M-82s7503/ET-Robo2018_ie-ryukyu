@@ -33,9 +33,9 @@ void main_task(intptr_t unused) {
     running_L.calibration(&ptrs);
 
     //###  【3】 ライントレース  ###//
-    msg_f("start running !", 0);
-    running_L.run_L(&ptrs);
-    msg_f("line trace finished!", 0);
+//    msg_f("start running !", 0);
+//    running_L.run_L(&ptrs);
+//    msg_f("line trace finished!", 0);
 
     //###  【4】 AIアンサー  ###//
     AI_answer ai_ans;
@@ -47,8 +47,8 @@ void main_task(intptr_t unused) {
     ai_ans.terminate();
 
     // 駐車
-    Parking parking;
-    parking.after_AI();
+//    Parking parking;
+//    parking.after_AI();
 
     ext_tsk();
 }

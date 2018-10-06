@@ -50,7 +50,7 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
 //    int whites[2] = {Enums::WHITE, Enums::GREY};
 
     // 数字画像まで移動
-    straight.run(Enums::FRONT, until_greenMat);
+//    straight.run(Enums::FRONT, until_greenMat);
     //msg_f("AI_answer to_color(Enums::WHITE);", 1);
     moveUtil.to_color( static_cast<int>(Enums::WHITE) );
 //    straight.run(Enums::Colors::BLACK, Enums::Directs::FRONT, 500);
@@ -61,6 +61,7 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
     // 開始位置に移動
     moveUtil.turn(-90);
     turn_oneSide.run(Enums::LEFT, 90);
+    straight.setBase_PWM(10);
     straight.run(Enums::Directs::BACK, 60);
     moveUtil.to_color( static_cast<int>(Enums::Colors::BLACK) );
     // テスト待ち
@@ -78,11 +79,16 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
     //--  <2> 横・下側  --//
     // 開始位置に移動
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );  // 一旦マットに出る。
+    mv_basic.stop();
     straight.run(Enums::FRONT, sensor_dist);
+    mv_basic.stop();
     turn_oneSide.run(Enums::RIGHT, 180);  // 白が見えるまで回転。
+    mv_basic.stop();
     // (未テスト) ズレ調整
     straight.run(Enums::Directs::FRONT, 30);
+    mv_basic.stop();
     moveTemps.ride_onLine_vertical(Enums::Colors::BLACK, Enums::Directs::LEFT);
+    mv_basic.stop();
     // 読み取り実行
     reading_digital.run(2, yoko_2);
     reading_digital.run(3, yoko_2);
@@ -92,12 +98,15 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
     //--  <3> 縦  --//
     // 開始位置に移動
     // 1回転
+    moveUtil.setSpeed(10);
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );  // 一旦マットに出る。
+    mv_basic.stop();
 //    moveUtil.turn(90+10);     // [確認] ズレように値を調整した。
     turn.run(Enums::Directs::RIGHT, 90);
     // 2回転
     moveUtil.to_color( static_cast<int>(Enums::BLACK) );
     turn_oneSide.run(Enums::LEFT, 180);
+    mv_basic.stop();
     straight.run(Enums::BACK, sensor_dist*1.5);
     //moveUtil.to_color( static_cast<int>(Enums::WHITE) );  // 多分、ここまでは行かない。
     moveTemps.ride_onLine_vertical(Enums::Colors::BLACK, Enums::Directs::RIGHT);
