@@ -32,7 +32,7 @@ Move_block::Move_block(int analyze_result[2][3]):
 
 //int answer[2][3] =    {{0, 1, 1},{0, 1 ,0}};
 //int j;
-const int duration = 2000;
+const int duration = 1300;
 const int sens_dist = 60;
 
 
@@ -139,7 +139,7 @@ void Move_block::turn_case(int j)
 // デジタル側のみ、移動させるパターン
 void Move_block::by_turn()
 {
-    moveutil.setSpeed(15);
+    moveutil.setSpeed(10);
     turn_case(0);
     turn_case(1);
     turn_case(2);
