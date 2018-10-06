@@ -63,6 +63,6 @@ class AI_answer {
     float analog_size_yoko = img_size_yoko - img_yohaku_yoko*2;
 
     /*  機体 の計測データ  */
-    const int sensor_dist = 30;  // (未) タイヤの中心線から、カラーセンサーまでの距離
+    const int sensor_dist = 35;  // (未) タイヤの中心線から、カラーセンサーまでの距離
     const int tire_dist = 75;
 };

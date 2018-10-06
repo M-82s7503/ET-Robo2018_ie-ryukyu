@@ -33,7 +33,7 @@ Move_block::Move_block(int analyze_result[2][3]):
 //int answer[2][3] =    {{0, 1, 1},{0, 1 ,0}};
 //int j;
 const int duration = 2000;
-const int sens_dist = 45;
+const int sens_dist = 60;
 
 
 
@@ -91,8 +91,11 @@ void Move_block::turn_case(int j)
         case 0:
             moveutil.raiseArm(30, 20);
             //moveutil.to_color(Enums::WHITE);
-            moveutil.to_color(static_cast<int>( Enums::BLACK ));
             moveutil.straight(sens_dist);
+            moveutil.to_color(static_cast<int>( Enums::WHITE ));
+            moveutil.straight(sens_dist);
+            moveutil.straight(180);
+            moveutil.to_color(static_cast<int>( Enums::BLACK ));
             moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),0,180,0);
             moveutil.stop();
             clock.sleep(duration);
@@ -136,6 +139,7 @@ void Move_block::turn_case(int j)
 // デジタル側のみ、移動させるパターン
 void Move_block::by_turn()
 {
+    moveutil.setSpeed(15);
     turn_case(0);
     turn_case(1);
     turn_case(2);

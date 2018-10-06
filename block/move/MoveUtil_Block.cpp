@@ -50,6 +50,12 @@ void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,in
 
   flag1 = flag2 = false;
 
+  // ブロックの移動                                                              
+  if(jud == -1){
+    straight(50);
+  }
+
+
   do{
     /* 機体の角度の調整 */
     if(*car_x != move_x){
@@ -249,7 +255,7 @@ void MoveUtil_Block::hand_move(int jud){
     if(jud != 0){
       if(jud == 1){
         handWheel.setPWM(2);
-        if(handWheel.getCount() > 60){
+        if(handWheel.getCount() > 100){
           handWheel.stop();
           break;
         }
