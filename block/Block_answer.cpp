@@ -1,67 +1,82 @@
 #include "Block_answer.hpp"
 
 
+Block_answer::Block_answer():
+  colorSensor(PORT_2) // センサのポート指定
+  , tai()
+{}
+
 void Block_answer::run() {
   int count = 0; 
   int a[3] = {5,3,4};
   int k = 0;
-  code.Solve(solve_num,code_num);
-  map.block_jud(solve_num); // 暗号よりブロックの初期配置の計算
 
+  // マップを作成し、初期化する。
+  Map map;
+  code.Solve(solve_num, code_num);  //暗号を解読し、solve_num[5] に保存する
+  map.block_jud(solve_num); // 暗号よりブロックの初期配置の計算
+  
+  // 【要確認】仮想ロボを起動！
+  Map_Move mapMV(&map);
 
   tai.to_color(5);
-   /*
+
+  
+  /*  <<<  1こだけ動かして離脱パターン  >>>
     */
   // ブロックまで移動       
-  map.priority_move(&map.move_x,&map.move_y,map.block); // 優先順位決定               
-  tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,1); // 目的まで移動                                    
-  map.block[map.car_y][map.car_x] = Map_Move::NO_EXIST; // マップの更新
+  mapMV.priority_move(); // 優先順位決定               
+  mapMV.purpose_move(90); // 目的まで移動                                    
+  map.blocks[mapMV.car_y][mapMV.car_x] = NO_EXIST; // マップの更新
                            
-  // ブロックを指定の位置まで移動させる                                              
+  // ブロックを指定の位置まで移動させる       
   tai.straight(50);
-  map.move_point(2,&map.move_x,&map.move_y,map.block); // ブロックの色により向かう場所の決定                                       
-  tai.purpose_move(&map.car_x,&map.car_y,0,3,&map.car_degree,map.block,-1); // 目的まで移動                                  
-  // 次のブロックを探すために一個前に戻る                                             
-  map.block[0][3] = Map_Move::AFTER_MOVE_BLOCK; // マップの更新     
-  tai.back_move(map.car_degree,&map.car_x,&map.car_y); // 一個前の座標に移動      
+  mapMV.move_point(BLUE); // ブロックの色により向かう場所の決定
+  mapMV.purpose_move(0,3, 30); // 目的まで移動                                  
+  // 次のブロックを探すために一個前に戻る      
+  map.blocks[0][3] = AFTER_MOVE_BLOCK; // マップの更新     
+  mapMV.back_move(); // 一個前の座標に移動      
 
 
 
- /*
+  /*  <<<  完全版  >>>
+   */
   // ブロックまで移動       
-  map.priority_move(&map.move_x,&map.move_y,map.block); // 優先順位決定               
-  tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,1); // 目的まで移動                                    
-  map.block[map.car_y][map.car_x] = Map_Move::NO_EXIST; // マップの更新              \
+  mapMV.priority_move(); // 優先順位決定               
+  mapMV.purpose_move(90); // 目的まで移動                                    
+  map.blocks[mapMV.car_y][mapMV.car_x] = NO_EXIST; // マップの更新
                            
-  // ブロックを指定の位置まで移動させる                                              
+  // ブロックを指定の位置まで移動させる       
   tai.straight(50);
-  map.move_point(2,&map.move_x,&map.move_y,map.block); // ブロックの色により向かう場所の決定                                       
-  tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,-1); // 目的まで移動                                  
-  // 次のブロックを探すために一個前に戻る                                             
-  map.block[map.move_y][map.move_x] = Map_Move::AFTER_MOVE_BLOCK; // マップの更新     
-  tai.back_move(map.car_degree,&map.car_x,&map.car_y); // 一個前の座標に移動      
+  mapMV.move_point(BLUE); // ブロックの色により向かう場所の決定
+  mapMV.purpose_move(30); // 目的まで移動                                  
+  // 次のブロックを探すために一個前に戻る      
+  map.blocks[mapMV.move_y][mapMV.move_x] = AFTER_MOVE_BLOCK; // マップの更新     
+  mapMV.back_move(); // 一個前の座標に移動      
 
+  int8_t color = -1;
   while(1) { 
-    // ブロックまで移動                                            
-    map.priority_move(&map.move_x,&map.move_y,map.block); // 優先順位決定 
-    tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,1); // 目的まで移動                   
-    map.block[map.car_y][map.car_x] = Map_Move::NO_EXIST; // マップの更新                         
+    // ブロックまで移動     
+    mapMV.priority_move(); // 優先順位決定 
+    mapMV.purpose_move(90); // 目的まで移動                   
+    map.blocks[mapMV.car_y][mapMV.car_x] = NO_EXIST; // マップの更新                         
     // ブロックを指定の位置まで移動させる 
-    if(color.OutputColor() != 0 && color.OutputColor() != 1 && color.OutputColor() != 6){       
-      map.move_point(color.OutputColor(),&map.move_x,&map.move_y,map.block); // ブロックの色により向かう場所の決定                         
+    color = colorSensor.getColorNumber();
+    if(color != 0 && color != 1 && color != 6){       
+      mapMV.move_point(color); // ブロックの色により向かう場所の決定                         
     }else{
-      map.move_point(a[k],&map.move_x,&map.move_y,map.block); // ブロックの色により向かう場所の決定                         
+      mapMV.move_point(a[k]); // ブロックの色により向かう場所の決定                         
     }
-    tai.purpose_move(&map.car_x,&map.car_y,map.move_x,map.move_y,&map.car_degree,map.block,-1); // 目的まで移動                                  
+    mapMV.purpose_move(30); // 目的まで移動                                  
     // 次のブロックを探すために一個前に戻る                                   
-    map.block[map.move_y][map.move_x] = Map_Move::AFTER_MOVE_BLOCK; // マップの更新   
-    tai.back_move(map.car_degree,&map.car_x,&map.car_y); // 一個前の座標に移動
+    map.blocks[mapMV.move_y][mapMV.move_x] = AFTER_MOVE_BLOCK; // マップの更新   
+    mapMV.back_move(); // 一個前の座標に移動
   
     // 終了条件
     int i,j;
-    for(i = 0; i < 4; i++){                                                     
-      for(j = 0; j < 4; j++){                                                   
-        if(map.block[i][j] == Map_Move::AFTER_MOVE_BLOCK){                                
+    for(i = 0; i < 4; i++){              
+      for(j = 0; j < 4; j++){            
+        if(map.blocks[i][j] == AFTER_MOVE_BLOCK){                                
           count++;    
         }             
       }               
@@ -74,14 +89,12 @@ void Block_answer::run() {
     }else{
       count = 0;
     }
-    
-   
 
   }
-   */
 
-  tai.purpose_move(&map.car_x,&map.car_y,3,2,&map.car_degree,map.block,1); // 目的まで移動                   
-  switch(map.car_degree){
+  mapMV.purpose_move(3,2, 90); // 目的まで移動
+
+  switch(mapMV.car_degree){
   case 90:
     tai.turn(90);
     break;

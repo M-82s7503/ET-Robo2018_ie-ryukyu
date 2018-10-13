@@ -5,9 +5,9 @@ APPL_COBJS +=
 
 APPL_CXXOBJS += \
     Block_answer.o \
-    Color_recognition..o \
     Code_Solve.o \
     Map_Move.o \
+    Map.o \
     MoveUtil_Block.o \
     Parking.o \
     MoveTemps.o \

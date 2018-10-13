@@ -1,4 +1,5 @@
-#include "Enums.h"
+#include "MoveUtil.h"
+#include "Map.hpp"
 #include <cstdlib>
 
 #define N 4
@@ -7,30 +8,20 @@
 /* Map関するクラス */
 class Map_Move {
   public:
-    Map_Move();
-    void block_jud(int solove_num[5]);  // 暗号よりブロックの初期配置の計算     
-    void priority_move(int* move_x,int* move_y,int block[N][N]); // 運ぶブロックの優先順位を決める
-    void move_point(int block_color,int* move_x,int* move_y,int block[N][N]); // ブロックを移動させる座標を決定する
+    Map_Move(Map* map_p);
+    void priority_move(); // 移動させるブロックの優先順位を決める
+    void move_point(int block_color); // ブロックを移動させる座標を決定する
+    // ブロック並べ 用の動き
+    void purpose_move(int deg);
+    void purpose_move(int mv_x, int mv_y, int deg);
+    void back_move();
 
   public:
-    /* mapに関する定数 */
-    enum {
-        NO_EXIST,
-        BEFORE_MOVE_BLOCK,
-        AFTER_MOVE_BLOCK
-    };
-
-    int block[N][N]; //block exist
-    int map_color[N][N]; //map color
-/*    // 定数配列として初期化する場合。
-    const int map_color[N][N] = {
-        {RED, YELLOW, BLUE, GREEN},
-        {BLUE, GREEN, RED, YELLOW},
-        {RED, YELLOW, BLUE, GREEN},
-        {BLUE, GREEN, RED, YELLOW}
-    }; //map color     */
-    int car_x,car_y;
-    int move_x,move_y;
+    int car_x, car_y;
+    int move_x, move_y;
     int car_degree;
 
+  private:
+    Map* map;
+    MoveUtil mvUtil;
 };
