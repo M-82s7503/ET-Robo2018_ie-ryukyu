@@ -64,10 +64,11 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
     moveUtil.turn(-90);
     turn_oneSide.run(Enums::LEFT, 90);
     straight.setBase_PWM(10);
-    straight.run(Enums::Directs::BACK, 90);
+    straight.run(Enums::Directs::BACK, 80);
+//    straight.run(Enums::Colors::BLACK, Enums::Directs::BACK, 10);
     mv_basic.stop();
-    moveUtil.to_color( static_cast<int>(Enums::Colors::BLACK) );
-    mv_basic.stop();
+    moveUtil.to_color( static_cast<int>(Enums::Colors::WHITE) );
+//    mv_basic.stop();
     // テスト待ち
 //    straight.run(Enums::Colors::BLACK, Enums::Directs::FRONT,30);
 

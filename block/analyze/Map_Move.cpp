@@ -13,7 +13,7 @@ Map_Move::Map_Move()
       block[i][j] = NO_EXIST;
     }
   }
-
+/**/
   map_color[0][0] = RED;
   map_color[0][1] = YELLOW;
   map_color[0][2] = BLUE;
@@ -36,7 +36,7 @@ Map_Move::Map_Move()
 
 }
 
-/* 暗号よりブロックの初期配置の計算 */
+/* (暗号の解読結果から)ブロックの初期配置を計算する */
 void Map_Move::block_jud(int code_solve[5])
 {
   int count;
@@ -72,7 +72,6 @@ void Map_Move::priority_move(int* move_x,int* move_y,int block[N][N])
 
     }
   }
-
 
 }
 

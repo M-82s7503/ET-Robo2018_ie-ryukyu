@@ -42,7 +42,7 @@ void MoveUtil_Block::back(int distance){
   }
 }
 
-//目標の座標まで移動する
+/* 次に向かうべきブロッック置き場まで移動する */
 void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,int* car_degree,int block[4][4],int jud){
   
   hand_move(jud);

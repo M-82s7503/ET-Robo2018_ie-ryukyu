@@ -94,7 +94,7 @@ void MoveUtil::turn(int degree,int side) {
 
 
 //指定の距離進む
-// 9/26 "-"" でバックするように改良。
+// 9/26 " - "(マイナス) でバックするように改良。
 void MoveUtil::straight(int distance){
   startLeftDig = leftWheel.getCount();
   endLeftDig = startLeftDig + (distance * 9 / 8);
