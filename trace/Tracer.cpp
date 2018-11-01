@@ -45,6 +45,19 @@ void Tracer::setParam(int pid_pattern) {
 }
 
 
+float Tracer::calc_pid(int sensor_val) {
+    diff[0] = diff[1];
+    diff[1] = sensor_val - target_val;
+    intergral += (diff[1] + diff[0]) / 2.0*DELTA_T;
+
+    p = KP * diff[1];
+    i = KI * intergral;
+    d = KD * (diff[1] - diff[0]) / DELTA_T;
+
+    return p+d;
+}
+
+
 // オーバーライド
 // run(Enums::Directs LorR, int distance) でも呼び出される。
 void Tracer::setVector(Enums::Directs LorR, int distance) {
@@ -57,19 +70,6 @@ void Tracer::setVector(Enums::Directs LorR, int distance) {
 void Tracer::run(Enums::Directs direct, int distance) {
     setVector(direct, distance);
     Moving::run();
-}
-
-
-float Tracer::calc_pid(int sensor_val) {
-    diff[0] = diff[1];
-    diff[1] = sensor_val - target_val;
-    intergral += (diff[1] + diff[0]) / 2.0*DELTA_T;
-
-    p = KP * diff[1];
-    i = KI * intergral;
-    d = KD * (diff[1] - diff[0]) / DELTA_T;
-
-    return p+d;
 }
 
 
@@ -123,7 +123,7 @@ bool Tracer::break_condition() {
 }
 
 
-void Tracer::calibration(){
+void Tracer::calibration(int8_t white_val, int8_t black_val) {
   uint8_t list_size = 5;
   while(lowpass_list.size() <= list_size){
     int8_t sensor_val = colorSensor->getBrightness();

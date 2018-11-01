@@ -23,7 +23,8 @@ class Tracer : public Moving, public To_Vector_IF {
     void setVector(Enums::Directs LorR, int distance);
     //void terminate();
     // キャリブレーション
-    void calibration();
+    void calibration(int8_t white_val, int8_t black_val);
+
   protected:
     float decide_pwm_l();
     float decide_pwm_r();

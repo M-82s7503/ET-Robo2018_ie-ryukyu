@@ -17,7 +17,7 @@ class Run_RL {
     // Bluetooth の初期設定
     FILE* setup_Bluetooth(Clock clock);
     // PID の target の値を修正
-    void setup_PID_target(FILE *bt, Clock clock);
+    void setup_PID(Clock clock, Pointers ptrs);
     // Start  リモートスタート と タッチスタートの２種類
     void remote_start(FILE *bt, Clock clock, Pointers* ptrs_p);
     void touch_start(Clock clock, Pointers* ptrs_p);
@@ -26,5 +26,6 @@ class Run_RL {
     // 初期位置コードの桁数を入力する。
     const int8_t MESSAGE_LEN = 4;
     Clock clock;
-
+    int8_t white_val = -1, 
+            black_val = -1;
 };

@@ -11,7 +11,7 @@ void ext_cyc(intptr_t exinf) {
 }
 
 void ext_task(intptr_t exinf) {
-    if (ev3_button_is_pressed(LEFT_BUTTON)) {
+    if (ev3_button_is_pressed(UP_BUTTON)) {
       wup_tsk(MAIN_TASK);  // 左ボタン押下でメインを起こす
     }
     ext_tsk();

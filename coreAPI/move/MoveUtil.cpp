@@ -190,8 +190,8 @@ int MoveUtil::to_color_turn(int color, int L_dig, int R_dig, int nagasi_dig){
 void MoveUtil::resetArm() {
   uint32_t b_time = clock.now();//msec
   // 限界までアームを下げる。
-  while( (clock.now()-b_time) < 800 ) {
-    centerArm.setPWM(-20);
+  while( (clock.now()-b_time) < 600 ) {
+    centerArm.setPWM(-25);
   }
   centerArm.reset();
 }

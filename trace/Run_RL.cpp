@@ -7,9 +7,6 @@ void Run_RL::calibration_L(Pointers* ptrs_p) {
     msg_f("-----<<<  Calibration  >>>-----",1);
     fprintf(bt, "-----<<<  Calibration  >>>-----\r\n");
         
-    //###  PID ターゲット設定  ###//
-    setup_PID_target(bt, clock);
-
     msg_clear();
     
     //###  リモートスタート  ###//
@@ -24,9 +21,6 @@ int Run_RL::calibration_R(Pointers* ptrs_p) {
     msg_f("-----<<<  Calibration  >>>-----",1);
     fprintf(bt, "-----<<<  Calibration  >>>-----\r\n");
         
-    //###  PID ターゲット設定  ###//
-    setup_PID_target(bt, clock);
-
     //###  初期位置コードを入力  ###//
     char message[MESSAGE_LEN + 1] = {0};
     char isInputComped = 'n';
@@ -79,21 +73,50 @@ FILE* Run_RL::setup_Bluetooth(Clock clock) {
     return bt;
 }
 
-//###  PID ターゲット設定  ###//
-void Run_RL::setup_PID_target(FILE *bt, Clock clock) {
+//###  PIDパラメータ のセットアップ  ###//
+void Run_RL::setup_PID(Clock clock, Pointers ptrs) {
+    msg_f("-----<<<  Calibration PID  >>>-----",1);
+    //fprintf(bt, "\r\n\r\n-----<<<  Calibration PID  >>>-----\r\n");
 
+    ColorSensor* colorSensor = ptrs.getColorSensor();
+    while (1) {
+        msg_f("WHITE  ( <- Left Button )", 2);
+        msg_f("BLACK  ( -> Right Button )", 5);
+
+        if (ev3_button_is_pressed(RIGHT_BUTTON)) {
+            white_val = colorSensor->getBrightness();
+            msg_f(white_val, 3);
+            //fprintf(bt, "White val : %d\r\n", white_val);
+        } else if (ev3_button_is_pressed(LEFT_BUTTON)) {
+            black_val = colorSensor->getBrightness();
+            msg_f(black_val, 6);
+            //fprintf(bt, "Black val : %d\r\n", black_val);
+        }
+        if ( white_val != -1 && black_val != -1 ) {
+            break;
+        }
+    }
+    
+    // ライントレース の キャリブレーション
+    //tracer.calibration(white_val, black_val);
 }
 
 //###  アームの角度を初期化 → 調整  ###//
+//###  リモートスタート  ###//
 void Run_RL::remote_start(FILE *bt, Clock clock, Pointers* ptrs_p) {
     Pointers ptrs(ptrs_p);
     Move_Basic mv_basic(ptrs);
+
     mv_basic.resetArm();
     mv_basic.raiseArm(42, 30);
     msg_f("boot completed !",1);
-    clock.wait(100);  //入れると安定した。
+    clock.wait(100);
 
-    //###  リモートスタート  ###//
+    //###  PID ターゲット設定  ###//
+    setup_PID(clock, ptrs);
+    clock.wait(200);  //入れると安定した。
+
+    // 1 を押してスタート
     bool isStart = false;
     int8_t tmp_d;
     msg_f("-----  Waiting start ... -----", 1);
@@ -114,15 +137,27 @@ void Run_RL::remote_start(FILE *bt, Clock clock, Pointers* ptrs_p) {
         if (isStart)
             break;
     }
-    clock.wait(200);
+    clock.wait(300);
     msg_clear();
     msg_f("     Start !", 3);
 }
 
 //###  タッチスタート  ###//
+// 一応残してる。もしもの時のため。
 void Run_RL::touch_start(Clock clock, Pointers* ptrs_p) {
     Pointers ptrs(ptrs_p);
     TouchSensor* touchSensor = ptrs.getTouchSensor();
+    Move_Basic mv_basic(ptrs);
+
+    mv_basic.resetArm();
+    mv_basic.raiseArm(42, 30);
+    msg_f("boot completed !",1);
+    clock.wait(100);
+
+    //###  PID ターゲット設定  ###//
+    setup_PID(clock, ptrs);
+    clock.wait(200);  //入れると安定した。
+
     while(1){
         if (touchSensor->isPressed()) {
             break;
@@ -139,7 +174,7 @@ void Run_RL::run_L(Pointers* ptrs_p) {
     Tracer tracer(ptrs);
     Move_Basic mv_basic(ptrs);
     // キャリブレーション
-    tracer.calibration();
+    tracer.calibration(white_val, black_val);
     // tracer のテスト
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2500);
@@ -153,6 +188,7 @@ void Run_RL::run_L(Pointers* ptrs_p) {
     tracer.run(Enums::LEFT, 2300);
     tracer.setParam(0);
     tracer.run(Enums::LEFT, 1400);
+
     mv_basic.stop();
 }
 
@@ -162,7 +198,7 @@ void Run_RL::run_R(Pointers* ptrs_p) {
     Tracer tracer(ptrs);
     Move_Basic mv_basic(ptrs);
     // キャリブレーション
-    tracer.calibration();
+    tracer.calibration(white_val, black_val);
     // tracer のテスト
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2150);
@@ -174,5 +210,4 @@ void Run_RL::run_R(Pointers* ptrs_p) {
     tracer.run(Enums::LEFT, 2250);
 
     mv_basic.stop();
-
 }
