@@ -27,19 +27,18 @@ Clock clock;
 
 void main_task(intptr_t unused) {
     Pointers ptrs(&centerArm, &leftWheel, &rightWheel, &colorSensor, &touchSensor);
-    //###  アームの角度を初期化 → 調整  ###//
-    //###  タッチ スタート  ###//
-    Run_RL running_L;
-    running_L.calibration(&ptrs);
+    //###  キャリブレーション  ###//
+    Run_RL running_R;
+    int block_code = running_R.calibration_R(&ptrs);
+    msg_f(block_code, 0);
 
     //###  【1】 ライントレース  ###//
-    Run_RL running_R;
     running_R.run_R(&ptrs);
 
     //###  【2】 ブロック並べ  ###//
     Block_answer block_ans;
     block_ans.run();
-    // 駐車
+    //###   駐車   ###//
     Parking parking;
     parking.after_Block();
 

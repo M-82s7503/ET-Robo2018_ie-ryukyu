@@ -134,8 +134,8 @@ void Tracer::calibration(){
   for(auto i = lowpass_list.begin(); i != lowpass_list.end(); ++i){
     average += *i;
   }
-  msg_f("calibration",1);
-  msg_f(average/list_size, 1);
+  //msg_f("calibration",1);
+  //msg_f(average/list_size, 1);
   
   all_avarage = average/list_size;
 }

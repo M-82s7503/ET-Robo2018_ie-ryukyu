@@ -27,15 +27,12 @@ ColorSensor colorSensor(PORT_2);
 
 void main_task(intptr_t unused) {
     Pointers ptrs(&centerArm, &leftWheel, &rightWheel, &colorSensor, &touchSensor);
-    //###  アームの角度を初期化 → 調整  ###//
-    //###  タッチ スタート  ###//
+    //###  キャリブレーション  ###//
     Run_RL running_L;
-    running_L.calibration(&ptrs);
+    running_L.calibration_L(&ptrs);
 
     //###  【3】 ライントレース  ###//
-//    msg_f("start running !", 0);
     running_L.run_L(&ptrs);
-//    msg_f("line trace finished!", 0);
 
     //###  【4】 AIアンサー  ###//
     AI_answer ai_ans;
@@ -46,9 +43,33 @@ void main_task(intptr_t unused) {
     ai_ans.answer_forBlock();
     ai_ans.terminate();
 
-    // 駐車
+    //###   駐車   ###//
     Parking parking;
     parking.after_AI();
 
     ext_tsk();
 }
+
+
+//*****************************************************************************
+// 関数名 : bt_task
+// 引数 : unused
+// 返り値 : なし
+// 概要 : Bluetooth通信によるリモートスタート。 Tera Termなどのターミナルソフトから、
+//       ASCIIコードで1を送信すると、リモートスタートする。
+//*****************************************************************************
+/*
+void bt_task(intptr_t unused) {
+    while(1) {
+        uint8_t c = fgetc(bt); // 受信
+        switch(c) {
+            case '1':
+                bt_cmd = 1;
+                break;
+            default:
+                break;
+        }
+        fputc(c, bt); // エコーバック
+    }
+}*/
+

@@ -4,6 +4,7 @@
 #include "ev3api.h"
 
 extern void init_f(const char *str);
+extern void msg_clear();
 extern void msg_f(const char *str, int32_t line);
 extern void msg_f(int8_t n, int32_t line);
 extern void msg_f(uint8_t n, int32_t line);
