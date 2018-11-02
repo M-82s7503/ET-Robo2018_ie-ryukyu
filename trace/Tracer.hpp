@@ -24,7 +24,8 @@ class Tracer : public Moving, public To_Vector_IF {
     //void terminate();
     // キャリブレーション
     void calibration(int8_t white_val, int8_t black_val);
-
+    // ローパスフィルタの初期化
+    void setLowpassValue();
   protected:
     float decide_pwm_l();
     float decide_pwm_r();

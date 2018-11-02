@@ -124,6 +124,12 @@ bool Tracer::break_condition() {
 
 
 void Tracer::calibration(int8_t white_val, int8_t black_val) {
+  float coefficient = 0.4;
+  float sensor_average = (white_val + black_val) /2;
+  target_val = sensor_average * coefficient + target_val * (1- coefficient);
+}
+
+void Tracer::setLowpassValue(){
   uint8_t list_size = 5;
   while(lowpass_list.size() <= list_size){
     int8_t sensor_val = colorSensor->getBrightness();
@@ -137,8 +143,9 @@ void Tracer::calibration(int8_t white_val, int8_t black_val) {
   //msg_f("calibration",1);
   //msg_f(average/list_size, 1);
   
-  all_avarage = average/list_size;
+  all_avarage = average/list_size;  
 }
+
 
 int8_t Tracer::calc_lowpass(int8_t brightness){
   /*lowpass_list.pop_front();

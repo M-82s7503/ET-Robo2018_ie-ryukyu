@@ -172,6 +172,7 @@ void Run_RL::run_L(Pointers* ptrs_p) {
     Move_Basic mv_basic(ptrs);
     // キャリブレーション
     tracer.calibration(white_val, black_val);
+    tracer.setLowpassValue();
     // ライントレース
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2500);
@@ -196,6 +197,7 @@ void Run_RL::run_R(Pointers* ptrs_p) {
     Move_Basic mv_basic(ptrs);
     // キャリブレーション
     tracer.calibration(white_val, black_val);
+    tracer.setLowpassValue();
     // ライントレース
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2150);
