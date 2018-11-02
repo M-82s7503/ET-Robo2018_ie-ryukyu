@@ -33,6 +33,7 @@ void main_task(intptr_t unused) {
     // を実行する。
     Run_RL running_L;
     running_L.calibration_L(&ptrs);
+    //running_L.calibration_touch(&ptrs);  // Tracer で、タッチの方に切り替え
 
     //###  【3】 ライントレース  ###//
     running_L.run_L(&ptrs);

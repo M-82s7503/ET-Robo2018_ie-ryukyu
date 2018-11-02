@@ -3,21 +3,23 @@
 
 void Run_RL::calibration_L(Pointers* ptrs_p) {
     //###  Bluetooth を接続  ###//
-    FILE *bt = setup_Bluetooth(clock);
+    setup_Bluetooth();
     msg_f("-----<<<  Calibration  >>>-----",1);
     fprintf(bt, "\r\n\r\n-----<<<  Calibration  >>>-----\r\n");
-        
-    msg_clear();
     
-    //###  リモートスタート  ###//
-    remote_start(bt, clock, ptrs_p);
-    //touch_start(clock, ptrs_p);
+    Pointers ptrs(ptrs_p);
+    //###  アームの角度を初期化 → 調整  ###//
+    setup_Arm(ptrs);
+    clock.wait(200);
+    //###  PID ターゲット設定  ###//
+    setup_PID(ptrs);
+    clock.wait(200);  //入れると安定した。
 }
 
 
 int Run_RL::calibration_R(Pointers* ptrs_p) {
     //###  Bluetooth を接続  ###//
-    FILE *bt = setup_Bluetooth(clock);
+    setup_Bluetooth();
     msg_f("-----<<<  Calibration  >>>-----",1);
     fprintf(bt, "-----<<<  Calibration  >>>-----\r\n");
         
@@ -27,7 +29,7 @@ int Run_RL::calibration_R(Pointers* ptrs_p) {
     char ans_disp[64];
     while(1){
         // 受信
-        // MESSAGE_LEN を超えないと、書き込まない仕組み。
+        // MESSAGE_LEN を超えるまで、書き込まない仕組み。
         fprintf(bt, "\r\n初期位置コードを入力してください"); // エコーバック
         fprintf(bt, "\r\n(入力しても数字は表示されません。全部入力すると一括で表示されます。)\r\n>>> ");
         int size = fread(message, 1, MESSAGE_LEN, bt);
@@ -48,17 +50,32 @@ int Run_RL::calibration_R(Pointers* ptrs_p) {
         }
     }
     msg_clear();
-    
-    //###  リモートスタート  ###//
-    remote_start(bt, clock, ptrs_p);
-    //touch_start(clock, ptrs_p);
+
+    Pointers ptrs(ptrs_p);
+    //###  アームの角度を初期化 → 調整  ###//
+    setup_Arm(ptrs);
+    clock.wait(200);
+    //###  PID ターゲット設定  ###//
+    setup_PID(ptrs);
+    clock.wait(200);  //入れると安定した。
 
     return atoi(message);
 }
 
 
+void Run_RL::calibration_touch(Pointers* ptrs_p) {
+    //msg_f("-----<<<  Calibration  >>>-----",1);
+    Pointers ptrs(ptrs_p);
+    //###  アームの角度を初期化 → 調整  ###//
+    setup_Arm(ptrs);
+    clock.wait(200);
+    //###  PID ターゲット設定  ###//
+    setup_PID(ptrs);
+    clock.wait(200);  //入れると安定した。
+}
+
 //###  Bluetooth を接続  ###//
-FILE* Run_RL::setup_Bluetooth(Clock clock) {
+void Run_RL::setup_Bluetooth() {
     // 接続を確認（してなければスリープ）
     msg_f("Waiting for Bluetooth connecting ...",1);
     while(!ev3_bluetooth_is_connected()){
@@ -66,15 +83,22 @@ FILE* Run_RL::setup_Bluetooth(Clock clock) {
     }
     msg_f("Bluetooth connected !",1);
     // シリアルポートを開く
-    FILE *bt = ev3_serial_open_file(EV3_SERIAL_BT);
+    bt = ev3_serial_open_file(EV3_SERIAL_BT);
     assert(bt != NULL);
     // Bluetooth仮想シリアルポートへの書き込むテスト
     fprintf(bt, "\r\nBluetooth SPP ID: %d\r\n", EV3_SERIAL_BT);
-    return bt;
+}
+
+//###  アームの角度を初期化 → 調整  ###//
+void Run_RL::setup_Arm(Pointers ptrs) {
+    Move_Basic mv_basic(ptrs);
+
+    mv_basic.resetArm();
+    mv_basic.raiseArm(42, 30);
 }
 
 //###  PIDパラメータ のセットアップ  ###//
-void Run_RL::setup_PID(Clock clock, Pointers ptrs) {
+void Run_RL::setup_PID(Pointers ptrs) {
     msg_f("---<<<  Calibration PID  >>>---",1);
     //fprintf(bt, "\r\n\r\n-----<<<  Calibration PID  >>>-----\r\n");
 
@@ -99,27 +123,12 @@ void Run_RL::setup_PID(Clock clock, Pointers ptrs) {
         }
         clock.wait(50);
     }
-    
-    // ライントレース の キャリブレーション
-    //tracer.calibration(white_val, black_val);
     msg_clear();
 }
 
-//###  アームの角度を初期化 → 調整  ###//
+
 //###  リモートスタート  ###//
-void Run_RL::remote_start(FILE *bt, Clock clock, Pointers* ptrs_p) {
-    Pointers ptrs(ptrs_p);
-    Move_Basic mv_basic(ptrs);
-
-    mv_basic.resetArm();
-    mv_basic.raiseArm(42, 30);
-    msg_f("boot completed !",1);
-    clock.wait(100);
-
-    //###  PID ターゲット設定  ###//
-    setup_PID(clock, ptrs);
-    clock.wait(200);  //入れると安定した。
-
+void Run_RL::remote_start(Pointers ptrs) {
     // 1 を押してスタート
     int8_t tmp_d;
     msg_f("-----  Waiting start ... -----", 1);
@@ -141,20 +150,8 @@ void Run_RL::remote_start(FILE *bt, Clock clock, Pointers* ptrs_p) {
 
 //###  タッチスタート  ###//
 // 一応残してる。もしもの時のため。
-void Run_RL::touch_start(Clock clock, Pointers* ptrs_p) {
-    Pointers ptrs(ptrs_p);
+void Run_RL::touch_start(Pointers ptrs) {
     TouchSensor* touchSensor = ptrs.getTouchSensor();
-    Move_Basic mv_basic(ptrs);
-
-    mv_basic.resetArm();
-    mv_basic.raiseArm(42, 30);
-    msg_f("boot completed !",1);
-    clock.wait(100);
-
-    //###  PID ターゲット設定  ###//
-    setup_PID(clock, ptrs);
-    clock.wait(200);  //入れると安定した。
-
     while(1){
         if (touchSensor->isPressed()) {
             break;
@@ -168,12 +165,17 @@ void Run_RL::touch_start(Clock clock, Pointers* ptrs_p) {
 
 void Run_RL::run_L(Pointers* ptrs_p) {
     Pointers ptrs(ptrs_p);
-    Tracer tracer(ptrs);
     Move_Basic mv_basic(ptrs);
-    // キャリブレーション
+    Tracer tracer(ptrs);
+    // キャリブレーション（計算）
     tracer.calibration(white_val, black_val);
     tracer.setLowpassValue();
-    // ライントレース
+
+    //###  スタート  ###//
+    remote_start(ptrs);  // リモート スタート
+    //touch_start(ptrs);  // タッチ スタート
+
+    //###  ライントレース  ###//
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2500);
     tracer.setParam(0);
@@ -193,12 +195,17 @@ void Run_RL::run_L(Pointers* ptrs_p) {
 
 void Run_RL::run_R(Pointers* ptrs_p) {
     Pointers ptrs(ptrs_p);
-    Tracer tracer(ptrs);
     Move_Basic mv_basic(ptrs);
-    // キャリブレーション
+    Tracer tracer(ptrs);
+    // キャリブレーション（計算）
     tracer.calibration(white_val, black_val);
     tracer.setLowpassValue();
-    // ライントレース
+
+    //###  スタート  ###//
+    remote_start(ptrs);  // リモート スタート
+    //touch_start(ptrs);  // タッチ スタート
+
+    //###  ライントレース  ###//
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2150);
     tracer.setParam(0);

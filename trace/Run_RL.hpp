@@ -9,23 +9,27 @@ class Run_RL {
   public:
     void calibration_L(Pointers* ptrs_p);
     int calibration_R(Pointers* ptrs_p);
+    void calibration_touch(Pointers* ptrs_p);
     // Rコースの走行
     void run_R(Pointers* ptrs_p);
     // Lコースの走行
     void run_L(Pointers* ptrs_p);
 
-    // Bluetooth の初期設定
-    FILE* setup_Bluetooth(Clock clock);
-    // PID の target の値を修正
-    void setup_PID(Clock clock, Pointers ptrs);
-    // Start  リモートスタート と タッチスタートの２種類
-    void remote_start(FILE *bt, Clock clock, Pointers* ptrs_p);
-    void touch_start(Clock clock, Pointers* ptrs_p);
-
   private:
+    // Bluetooth の初期設定
+    void setup_Bluetooth();
+    // アームの初期設定
+    void setup_Arm(Pointers ptrs);
+    // PID の target の値を修正
+    void setup_PID(Pointers ptrs);
+    // Start：リモートスタート と タッチスタートの２種類
+    void remote_start(Pointers ptrs);
+    void touch_start(Pointers ptrs);
     // 初期位置コードの桁数を入力する。
+
     const int8_t MESSAGE_LEN = 4;
     Clock clock;
     int8_t white_val = -1, 
             black_val = -1;
+    FILE *bt;
 };
