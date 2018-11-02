@@ -28,6 +28,9 @@ ColorSensor colorSensor(PORT_2);
 void main_task(intptr_t unused) {
     Pointers ptrs(&centerArm, &leftWheel, &rightWheel, &colorSensor, &touchSensor);
     //###  キャリブレーション  ###//
+    // Mac を ロボと Bluetooth で接続後、
+    //      $ screen /dev/tty.MindstormsEV3-SerialPor 115200
+    // を実行する。
     Run_RL running_L;
     running_L.calibration_L(&ptrs);
 
@@ -46,7 +49,7 @@ void main_task(intptr_t unused) {
     //###   駐車   ###//
     Parking parking;
     parking.after_AI();
-
+/**/
     ext_tsk();
 }
 

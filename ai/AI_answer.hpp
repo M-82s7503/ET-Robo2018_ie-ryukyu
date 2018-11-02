@@ -49,7 +49,7 @@ class AI_answer {
 
     /*  コース の計測データ  */
     // 灰色の終点から緑まで
-    const int until_greenMat = 100; // 27+13
+    const int until_greenMat = 200; // 27+13
     Enums::Colors greenMat_c = Enums::Colors::BLACK;
     /*  数字カード の計測データ  */
     const int img_size_tate = 435;//mm

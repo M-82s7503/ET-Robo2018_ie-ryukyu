@@ -28,6 +28,9 @@ Clock clock;
 void main_task(intptr_t unused) {
     Pointers ptrs(&centerArm, &leftWheel, &rightWheel, &colorSensor, &touchSensor);
     //###  キャリブレーション  ###//
+    // Mac を ロボと Bluetooth で接続後、
+    //      $ screen /dev/tty.MindstormsEV3-SerialPor 115200
+    // を実行する。
     Run_RL running_R;
     int block_code = running_R.calibration_R(&ptrs);
     msg_f(block_code, 0);

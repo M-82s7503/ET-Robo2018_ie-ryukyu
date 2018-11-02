@@ -5,7 +5,7 @@ void Run_RL::calibration_L(Pointers* ptrs_p) {
     //###  Bluetooth を接続  ###//
     FILE *bt = setup_Bluetooth(clock);
     msg_f("-----<<<  Calibration  >>>-----",1);
-    fprintf(bt, "-----<<<  Calibration  >>>-----\r\n");
+    fprintf(bt, "\r\n\r\n-----<<<  Calibration  >>>-----\r\n");
         
     msg_clear();
     
@@ -29,7 +29,7 @@ int Run_RL::calibration_R(Pointers* ptrs_p) {
         // 受信
         // MESSAGE_LEN を超えないと、書き込まない仕組み。
         fprintf(bt, "\r\n初期位置コードを入力してください"); // エコーバック
-        fprintf(bt, "\r\n入力しても表示されません。全部入力すると一括で表示されます。\r\n>>> "); // エコーバック
+        fprintf(bt, "\r\n(入力しても数字は表示されません。全部入力すると一括で表示されます。)\r\n>>> ");
         int size = fread(message, 1, MESSAGE_LEN, bt);
         if(size > 0){
             fwrite(message, 1, size, bt); // エコーバック
@@ -43,7 +43,7 @@ int Run_RL::calibration_R(Pointers* ptrs_p) {
         sprintf(ans_disp, " answer is : %c", isInputComped);
         msg_f(ans_disp, 5);
         if (isInputComped == 'y') {
-            fprintf(bt, "\r\n初期位置コードを確定しました！\r\n\r\n "); // エコーバック
+            fprintf(bt, "\r\n初期位置コードを確定しました！\r\n"); // エコーバック
             break;
         }
     }
@@ -69,36 +69,40 @@ FILE* Run_RL::setup_Bluetooth(Clock clock) {
     FILE *bt = ev3_serial_open_file(EV3_SERIAL_BT);
     assert(bt != NULL);
     // Bluetooth仮想シリアルポートへの書き込むテスト
-    fprintf(bt, "Bluetooth SPP ID: %d\r\n", EV3_SERIAL_BT);
+    fprintf(bt, "\r\nBluetooth SPP ID: %d\r\n", EV3_SERIAL_BT);
     return bt;
 }
 
 //###  PIDパラメータ のセットアップ  ###//
 void Run_RL::setup_PID(Clock clock, Pointers ptrs) {
-    msg_f("-----<<<  Calibration PID  >>>-----",1);
+    msg_f("---<<<  Calibration PID  >>>---",1);
     //fprintf(bt, "\r\n\r\n-----<<<  Calibration PID  >>>-----\r\n");
 
     ColorSensor* colorSensor = ptrs.getColorSensor();
+    msg_f("BLACK  ( <- Left Button )", 2);
+    msg_f(black_val, 3);
+    msg_f("WHITE  ( -> Right Button )", 4);
+    msg_f(white_val, 5);
+    msg_f("Enter  ( Enter Button )", 6);
     while (1) {
-        msg_f("WHITE  ( <- Left Button )", 2);
-        msg_f("BLACK  ( -> Right Button )", 5);
-
-        if (ev3_button_is_pressed(RIGHT_BUTTON)) {
-            white_val = colorSensor->getBrightness();
-            msg_f(white_val, 3);
-            //fprintf(bt, "White val : %d\r\n", white_val);
-        } else if (ev3_button_is_pressed(LEFT_BUTTON)) {
+        if (ev3_button_is_pressed(LEFT_BUTTON)) {
             black_val = colorSensor->getBrightness();
-            msg_f(black_val, 6);
+            msg_f(black_val, 3);
             //fprintf(bt, "Black val : %d\r\n", black_val);
+        } else if (ev3_button_is_pressed(RIGHT_BUTTON)) {
+            white_val = colorSensor->getBrightness();
+            msg_f(white_val, 5);
+            //fprintf(bt, "White val : %d\r\n", white_val);
         }
-        if ( white_val != -1 && black_val != -1 ) {
+        if ( ev3_button_is_pressed(ENTER_BUTTON) ) {
             break;
         }
+        clock.wait(50);
     }
     
     // ライントレース の キャリブレーション
     //tracer.calibration(white_val, black_val);
+    msg_clear();
 }
 
 //###  アームの角度を初期化 → 調整  ###//
@@ -117,7 +121,6 @@ void Run_RL::remote_start(FILE *bt, Clock clock, Pointers* ptrs_p) {
     clock.wait(200);  //入れると安定した。
 
     // 1 を押してスタート
-    bool isStart = false;
     int8_t tmp_d;
     msg_f("-----  Waiting start ... -----", 1);
     fprintf(bt, "\r\n\r\n-----<<<  遠隔スタート  >>>-----");
@@ -126,18 +129,12 @@ void Run_RL::remote_start(FILE *bt, Clock clock, Pointers* ptrs_p) {
         fprintf(bt, "\r\n1：スタート\r\n>>>  ");
         // ここで入力されるまでブロックされるので注意
         tmp_d = fgetc(bt); // 受信
-        switch(tmp_d) {
-            case '1':
-                isStart = true;
-                break;
-            default:
-                break;
-        }
+        msg_f(tmp_d, 4);
         fputc(tmp_d, bt); // エコーバック
-        if (isStart)
+        if (tmp_d == '1')
             break;
     }
-    clock.wait(300);
+    clock.wait(100);
     msg_clear();
     msg_f("     Start !", 3);
 }
@@ -175,7 +172,7 @@ void Run_RL::run_L(Pointers* ptrs_p) {
     Move_Basic mv_basic(ptrs);
     // キャリブレーション
     tracer.calibration(white_val, black_val);
-    // tracer のテスト
+    // ライントレース
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2500);
     tracer.setParam(0);
@@ -187,7 +184,7 @@ void Run_RL::run_L(Pointers* ptrs_p) {
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2300);
     tracer.setParam(0);
-    tracer.run(Enums::LEFT, 1400);
+    tracer.run(Enums::LEFT, 1000);
 
     mv_basic.stop();
 }
@@ -199,7 +196,7 @@ void Run_RL::run_R(Pointers* ptrs_p) {
     Move_Basic mv_basic(ptrs);
     // キャリブレーション
     tracer.calibration(white_val, black_val);
-    // tracer のテスト
+    // ライントレース
     tracer.setParam(1);
     tracer.run(Enums::LEFT, 2150);
     tracer.setParam(0);

@@ -62,6 +62,7 @@ void AI_answer::readImg_digital(Pointers* ptrs_p) {
     //--  <1> 横・上側  --//
     // 開始位置に移動
     moveUtil.turn(-90);
+    // 位置合わせ：黒まで戻る。
     turn_oneSide.run(Enums::LEFT, 90);
     straight.setBase_PWM(10);
     straight.run(Enums::Directs::BACK, 80);
