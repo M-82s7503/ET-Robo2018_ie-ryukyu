@@ -1,3 +1,6 @@
+#ifndef TRACER_H_
+#define TRACER_H_
+
 #include "Motor.h"
 #include "ColorSensor.h"
 #include "clock.h"
@@ -54,3 +57,6 @@ class Tracer : public Moving, public To_Vector_IF {
     std::list<int> lowpass_list;
     int8_t all_avarage;
 };
+
+#endif  // TRACER_H_
+

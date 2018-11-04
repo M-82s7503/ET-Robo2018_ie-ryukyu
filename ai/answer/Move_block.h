@@ -29,10 +29,15 @@ private:
     ColorSensor colorSensor;
 //    TouchSensor touchSensor;
     Clock clock;
-    int answer[2][3];
+    int8_t answer[2][3];
+
+    //int answer[2][3] =    {{0, 1, 1},{0, 1 ,0}};
+    //int j;
+    const int duration = 1300;
+    const int sens_dist = 60;
 
 public:
-    Move_block(int analyze_result[2][3]);
+    Move_block(int8_t analyze_result[2][3]);
     void by_turn();
     void turn_case(int j);
     void Decision_Left(int i);

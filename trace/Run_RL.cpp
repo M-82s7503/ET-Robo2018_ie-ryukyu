@@ -154,8 +154,6 @@ void Run_RL::remote_start(Pointers ptrs) {
             break;
     }
     clock.wait(100);
-    msg_clear();
-    msg_f("     Start !", 3);
 }
 
 //###  タッチスタート  ###//
@@ -187,6 +185,7 @@ void Run_RL::run_L(Pointers* ptrs_p, bool isRemoteStart) {
     } else {
         touch_start(ptrs);  // タッチ スタート
     }
+    msg_clear();
 
     //###  ライントレース  ###//
 /*
@@ -204,10 +203,6 @@ void Run_RL::run_L(Pointers* ptrs_p, bool isRemoteStart) {
     tracer.setParam(Enums::PID::Midium);
     tracer.run(Enums::LEFT, 1000);
 
-/*
-    tracer.setParam(Enums::PID::Slow);
-    tracer.run(Enums::LEFT, 300);
-*/
     mv_basic.stop();
 }
 
@@ -226,6 +221,7 @@ void Run_RL::run_R(Pointers* ptrs_p, bool isRemoteStart) {
     } else {
         touch_start(ptrs);  // タッチ スタート
     }
+    msg_clear();
 
     //###  ライントレース  ###//
     tracer.setParam(Enums::PID::Fast);

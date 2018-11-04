@@ -14,6 +14,7 @@
 //#include "Turn.h"
 //#include "Straight.h"
 #include "MoveTemps.hpp"
+#include "Tracer.hpp"
 
 #include "PatternMatcher.hpp"
 #include "Move_block.h"
@@ -31,7 +32,7 @@ class AI_answer {
     void terminate();
 
     // 解析結果を２進数として保存
-    int analyze_result[2][3];
+    int8_t analyze_result[2][3];
 
   private:
     Clock clock;
@@ -46,6 +47,10 @@ class AI_answer {
     // 配列の初期化
     void init_arr_all0(int* arr, int arr_size);
     void init_arr_all0(float* arr, int arr_size);
+
+    // その他
+    void analog_read_pattern(Reading_return3 reading_analog, int8_t return_th, Straight straight, MoveTemps moveTemps);
+    void conv_Binary_num(int8_t ans_num, int8_t arr[3]);
 
     /*  コース の計測データ  */
     // 灰色の終点から緑まで

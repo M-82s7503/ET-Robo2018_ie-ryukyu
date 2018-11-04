@@ -44,14 +44,13 @@ void main_task(intptr_t unused) {
 */
 
     //###  【3】 ライントレース  ###//
-    running_L.run_L(&ptrs, isRemoteStart);
+    //running_L.run_L(&ptrs, isRemoteStart);
 
     //###  【4】 AIアンサー  ###//
     AI_answer ai_ans;
     ai_ans.init();
-    ai_ans.readImg_digital(&ptrs);  // ;走行
-/*
-//    ai_ans.readImg_analog(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
+//    ai_ans.readImg_digital(&ptrs);  // ;走行
+    ai_ans.readImg_analog(&ptrs);  // ;走行
     // ブロックを動かす
     ai_ans.answer_forBlock();
     ai_ans.terminate();
@@ -59,6 +58,7 @@ void main_task(intptr_t unused) {
     //###   駐車   ###//
     Parking parking;
     parking.after_AI();
+/*
 */
     ext_tsk();
 }

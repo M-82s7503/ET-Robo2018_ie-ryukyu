@@ -20,7 +20,7 @@ tracer.stop();
 */
 
 /* 初期化 */
-Move_block::Move_block(int analyze_result[2][3]):
+Move_block::Move_block(int8_t analyze_result[2][3]):
   leftWheel(PORT_C),rightWheel(PORT_B),colorSensor(PORT_2)//,touchSensor(PORT_1)
 {
     for (int i=0; i<2; i++) {
@@ -30,36 +30,30 @@ Move_block::Move_block(int analyze_result[2][3]):
     }
 }
 
-//int answer[2][3] =    {{0, 1, 1},{0, 1 ,0}};
-//int j;
-const int duration = 1300;
-const int sens_dist = 60;
-
 
 
 void Move_block::Decision_Left(int j)
 {
-	if(answer[0][j] == 0)
-    {
-            moveutil.turn(-45);
-            moveutil.stop();
-            moveutil.raiseArm(90, 20);//アームを上に動かす
-            clock.sleep(duration);
-            moveutil.turn(-45);
-            moveutil.raiseArm(30, 20);//アームを下に動かす
-            clock.sleep(duration);
-            moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),180,0,40);
+	if(answer[0][j] == 0) {
+        moveutil.turn(-45);
+        moveutil.stop();
+        moveutil.raiseArm(90, 20);//アームを上に動かす
+        clock.sleep(duration);
+        moveutil.turn(-45);
+        moveutil.raiseArm(30, 20);//アームを下に動かす
+        clock.sleep(duration);
+        moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),180,0,40);
+
+    } else if (answer[0][j] == 1) {
+        moveutil.turn(45);
+        moveutil.raiseArm(90, 10);//アームを上に動かす
+        clock.sleep(duration);
+        moveutil.turn(45);
+        moveutil.raiseArm(30, 20);//アームを下に動かす
+        clock.sleep(duration);
+        moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),0,180,40);
+
     }
-        else if(answer[0][j] == 1)
-        {
-            moveutil.turn(45);
-            moveutil.raiseArm(90, 10);//アームを上に動かす
-            clock.sleep(duration);
-            moveutil.turn(45);
-            moveutil.raiseArm(30, 20);//アームを下に動かす
-            clock.sleep(duration);
-            moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),0,180,40);
-        }
 }
 
 void Move_block::Decision_Right(int j)

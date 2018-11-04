@@ -42,7 +42,7 @@ void PatternMatcher::solve_A(const float* readImg) {
     for (int8_t i=0; i<8; i++) {
         count_tmp = 0;
         // 一つずつ検証
-        for (int8_t px=0; px<7; px++) {
+        for (int8_t px=0; px<15; px++) {
             count_tmp += abs(ansImg_A[i][px] - readImg[px]);
         }
         // 類似度（％） に変換

@@ -17,8 +17,8 @@ make app="$1"
 if [ $# -eq 2 ]; then
     # app.cpp を appR.cpp に
     mv "$1/app.cpp" "$1/app$2.cpp" 
-    mv 'app' "ET_runAll_$2_app"
-    echo "ET_runAll_$2_app"
+    mv 'app' "ETrunAll_$2_app"
+    echo "ETrunAll_$2_app"
 else
     mv 'app' "$1_app$2"
     echo "$1_app$2"
