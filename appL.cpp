@@ -31,17 +31,26 @@ void main_task(intptr_t unused) {
     // Mac を ロボと Bluetooth で接続後、
     //      $ screen /dev/tty.MindstormsEV3-SerialPor 115200
     // を実行する。
+
     Run_RL running_L;
-    running_L.calibration_L(&ptrs);
-    //running_L.calibration_touch(&ptrs);  // Tracer で、タッチの方に切り替え
+    bool isRemoteStart = false;
+    if (isRemoteStart) {
+        running_L.calibration_L(&ptrs);
+    } else {
+        // タッチスタート の初期設定
+        running_L.calibration_touch(&ptrs, false);
+    }
+/*
+*/
 
     //###  【3】 ライントレース  ###//
-    running_L.run_L(&ptrs);
+    running_L.run_L(&ptrs, isRemoteStart);
 
     //###  【4】 AIアンサー  ###//
     AI_answer ai_ans;
     ai_ans.init();
     ai_ans.readImg_digital(&ptrs);  // ;走行
+/*
 //    ai_ans.readImg_analog(&leftWheel, &rightWheel, &colorSensor, &touchSensor);  // ;走行
     // ブロックを動かす
     ai_ans.answer_forBlock();
@@ -50,30 +59,8 @@ void main_task(intptr_t unused) {
     //###   駐車   ###//
     Parking parking;
     parking.after_AI();
-/**/
+*/
     ext_tsk();
 }
 
-
-//*****************************************************************************
-// 関数名 : bt_task
-// 引数 : unused
-// 返り値 : なし
-// 概要 : Bluetooth通信によるリモートスタート。 Tera Termなどのターミナルソフトから、
-//       ASCIIコードで1を送信すると、リモートスタートする。
-//*****************************************************************************
-/*
-void bt_task(intptr_t unused) {
-    while(1) {
-        uint8_t c = fgetc(bt); // 受信
-        switch(c) {
-            case '1':
-                bt_cmd = 1;
-                break;
-            default:
-                break;
-        }
-        fputc(c, bt); // エコーバック
-    }
-}*/
 

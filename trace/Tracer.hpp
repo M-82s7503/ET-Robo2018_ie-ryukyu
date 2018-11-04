@@ -24,13 +24,14 @@ class Tracer : public Moving, public To_Vector_IF {
     //void terminate();
     // キャリブレーション
     void calibration(int8_t white_val, int8_t black_val);
+    static constexpr float coefficient = 0.4;
     // ローパスフィルタの初期化
     void setLowpassValue();
+    
   protected:
     float decide_pwm_l();
     float decide_pwm_r();
     bool break_condition();
-    
 
   private:
     Enums::Directs line_side;
@@ -39,7 +40,7 @@ class Tracer : public Moving, public To_Vector_IF {
 
     float calc_pid(int sensor_val);
     int8_t calc_lowpass(int8_t brightness);
-    // 定数
+    // 定数変数
     float KP, KI, KD, DELTA_T;
     int target_val;
     int8_t speed;

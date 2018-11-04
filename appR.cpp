@@ -31,13 +31,20 @@ void main_task(intptr_t unused) {
     // Mac を ロボと Bluetooth で接続後、
     //      $ screen /dev/tty.MindstormsEV3-SerialPor 115200
     // を実行する。
+
+    bool isRemoteStart = true;
+    int block_code = 15432;
     Run_RL running_R;
-    int block_code = running_R.calibration_R(&ptrs);
-    //running_R.calibration_touch(&ptrs);  // Tracer で、タッチの方に切り替え
-    msg_f(block_code, 0);
+    if (isRemoteStart) {
+        block_code = running_R.calibration_R(&ptrs);
+        msg_f(block_code, 0);
+    } else {
+        // タッチスタート の初期設定
+        running_R.calibration_touch(&ptrs, true);
+    }
 
     //###  【1】 ライントレース  ###//
-    running_R.run_R(&ptrs);
+    running_R.run_R(&ptrs, isRemoteStart);
 
     //###  【2】 ブロック並べ  ###//
     Block_answer block_ans;

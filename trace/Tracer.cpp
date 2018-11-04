@@ -20,25 +20,25 @@ void Tracer::setParam(int pid_pattern) {
          *   ● DELTA_T (?)
          * を１セットとする。
          */
-        case Enums::PID::Slow:  // 遅い
+        case Enums::PID::Midium:  // 中間
             speed = (Motor::PWM_MAX) / 5;
             KP = 1.20;
-            KI = 0.02;
+            KI = 0;
             KD = 0.20;
             DELTA_T = 0.004;
             break;
-        case Enums::PID::Midium:  // 中間
+        case Enums::PID::Fast:  // 高速
             speed = (Motor::PWM_MAX) / 3;
             KP = 0.35;
-            KI = 0.02;
+            KI = 0;
             KD = 0.50;
             DELTA_T = 0.004;
             break;
-        case Enums::PID::Fast:  // 高速
-            speed = (Motor::PWM_MAX) / 1.8;
-            KP = 0.66;
-            KI = 0.02;
-            KD = 0.54;
+        case Enums::PID::Slow:  // 遅い
+            speed = (Motor::PWM_MAX) / 6;
+            KP = 0.43;
+            KI = 0.01;
+            KD = 0.2;
             DELTA_T = 0.004;
             break;
     }
@@ -54,7 +54,7 @@ float Tracer::calc_pid(int sensor_val) {
     i = KI * intergral;
     d = KD * (diff[1] - diff[0]) / DELTA_T;
 
-    return p+d;
+    return p+i+d;
 }
 
 
@@ -124,9 +124,9 @@ bool Tracer::break_condition() {
 
 
 void Tracer::calibration(int8_t white_val, int8_t black_val) {
-  float coefficient = 0.4;
   float sensor_average = (white_val + black_val) /2;
   target_val = sensor_average * coefficient + target_val * (1- coefficient);
+  msg_f(target_val, 6);
 }
 
 void Tracer::setLowpassValue(){

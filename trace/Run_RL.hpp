@@ -9,11 +9,11 @@ class Run_RL {
   public:
     void calibration_L(Pointers* ptrs_p);
     int calibration_R(Pointers* ptrs_p);
-    void calibration_touch(Pointers* ptrs_p);
+    void calibration_touch(Pointers* ptrs_p, bool isSetupPID);
     // Rコースの走行
-    void run_R(Pointers* ptrs_p);
+    void run_R(Pointers* ptrs_p, bool isRemoteStart);
     // Lコースの走行
-    void run_L(Pointers* ptrs_p);
+    void run_L(Pointers* ptrs_p, bool isRemoteStart);
 
   private:
     // Bluetooth の初期設定

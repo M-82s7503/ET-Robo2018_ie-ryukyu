@@ -63,15 +63,19 @@ int Run_RL::calibration_R(Pointers* ptrs_p) {
 }
 
 
-void Run_RL::calibration_touch(Pointers* ptrs_p) {
+void Run_RL::calibration_touch(Pointers* ptrs_p, bool isSetupPID) {
     //msg_f("-----<<<  Calibration  >>>-----",1);
     Pointers ptrs(ptrs_p);
     //###  アームの角度を初期化 → 調整  ###//
     setup_Arm(ptrs);
     clock.wait(200);
     //###  PID ターゲット設定  ###//
-    setup_PID(ptrs);
-    clock.wait(200);  //入れると安定した。
+    white_val = 20;
+    black_val = 0;
+    if (isSetupPID) {
+        setup_PID(ptrs);
+        clock.wait(200);  //入れると安定した。
+    }
 }
 
 //###  Bluetooth を接続  ###//
@@ -99,24 +103,30 @@ void Run_RL::setup_Arm(Pointers ptrs) {
 
 //###  PIDパラメータ のセットアップ  ###//
 void Run_RL::setup_PID(Pointers ptrs) {
-    msg_f("---<<<  Calibration PID  >>>---",1);
+    msg_f("---<<<  Calibration PID  >>>---",0);
     //fprintf(bt, "\r\n\r\n-----<<<  Calibration PID  >>>-----\r\n");
 
     ColorSensor* colorSensor = ptrs.getColorSensor();
-    msg_f("BLACK  ( <- Left Button )", 2);
+    msg_f("BLACK  ( <- Left Button )", 1);
     msg_f(black_val, 3);
-    msg_f("WHITE  ( -> Right Button )", 4);
+    msg_f("WHITE  ( -> Right Button )", 3);
     msg_f(white_val, 5);
-    msg_f("Enter  ( Enter Button )", 6);
+    msg_f("Enter  ( Enter Button )", 5);
     while (1) {
         if (ev3_button_is_pressed(LEFT_BUTTON)) {
             black_val = colorSensor->getBrightness();
-            msg_f(black_val, 3);
+            msg_f(black_val, 2);
             //fprintf(bt, "Black val : %d\r\n", black_val);
         } else if (ev3_button_is_pressed(RIGHT_BUTTON)) {
             white_val = colorSensor->getBrightness();
-            msg_f(white_val, 5);
+            msg_f(white_val, 4);
             //fprintf(bt, "White val : %d\r\n", white_val);
+        } else if (ev3_button_is_pressed(DOWN_BUTTON)) {
+            int target_val = 11;
+            float coefficient = Tracer::coefficient;
+            float sensor_average = (white_val + black_val) /2;
+            target_val = sensor_average * coefficient + target_val * (1- coefficient);
+            msg_f(target_val, 6);
         }
         if ( ev3_button_is_pressed(ENTER_BUTTON) ) {
             break;
@@ -149,21 +159,21 @@ void Run_RL::remote_start(Pointers ptrs) {
 }
 
 //###  タッチスタート  ###//
-// 一応残してる。もしもの時のため。
 void Run_RL::touch_start(Pointers ptrs) {
     TouchSensor* touchSensor = ptrs.getTouchSensor();
+    msg_f("----  Waiting toutch start ... ----", 1);
     while(1){
         if (touchSensor->isPressed()) {
             break;
         }
-        clock.wait(10);
+        clock.wait(20);
     }
     clock.wait(500);
 }
 
 
 
-void Run_RL::run_L(Pointers* ptrs_p) {
+void Run_RL::run_L(Pointers* ptrs_p, bool isRemoteStart) {
     Pointers ptrs(ptrs_p);
     Move_Basic mv_basic(ptrs);
     Tracer tracer(ptrs);
@@ -172,28 +182,37 @@ void Run_RL::run_L(Pointers* ptrs_p) {
     tracer.setLowpassValue();
 
     //###  スタート  ###//
-    remote_start(ptrs);  // リモート スタート
-    //touch_start(ptrs);  // タッチ スタート
+    if (isRemoteStart) {
+        remote_start(ptrs);  // リモート スタート
+    } else {
+        touch_start(ptrs);  // タッチ スタート
+    }
 
     //###  ライントレース  ###//
-    tracer.setParam(1);
+/*
+    tracer.setParam(Enums::PID::Fast);
     tracer.run(Enums::LEFT, 2500);
-    tracer.setParam(0);
+    tracer.setParam(Enums::PID::Midium);
     tracer.run(Enums::LEFT, 1500);
-    tracer.setParam(1);
+    tracer.setParam(Enums::PID::Fast);
     tracer.run(Enums::LEFT, 1800);
-    tracer.setParam(0);
+    tracer.setParam(Enums::PID::Midium);
     tracer.run(Enums::LEFT, 2000);
-    tracer.setParam(1);
+    tracer.setParam(Enums::PID::Fast);
     tracer.run(Enums::LEFT, 2300);
-    tracer.setParam(0);
+*/
+    tracer.setParam(Enums::PID::Midium);
     tracer.run(Enums::LEFT, 1000);
 
+/*
+    tracer.setParam(Enums::PID::Slow);
+    tracer.run(Enums::LEFT, 300);
+*/
     mv_basic.stop();
 }
 
 
-void Run_RL::run_R(Pointers* ptrs_p) {
+void Run_RL::run_R(Pointers* ptrs_p, bool isRemoteStart) {
     Pointers ptrs(ptrs_p);
     Move_Basic mv_basic(ptrs);
     Tracer tracer(ptrs);
@@ -202,17 +221,20 @@ void Run_RL::run_R(Pointers* ptrs_p) {
     tracer.setLowpassValue();
 
     //###  スタート  ###//
-    remote_start(ptrs);  // リモート スタート
-    //touch_start(ptrs);  // タッチ スタート
+    if (isRemoteStart) {
+        remote_start(ptrs);  // リモート スタート
+    } else {
+        touch_start(ptrs);  // タッチ スタート
+    }
 
     //###  ライントレース  ###//
-    tracer.setParam(1);
+    tracer.setParam(Enums::PID::Fast);
     tracer.run(Enums::LEFT, 2150);
-    tracer.setParam(0);
+    tracer.setParam(Enums::PID::Midium);
     tracer.run(Enums::LEFT, 5550);
-    tracer.setParam(1);
+    tracer.setParam(Enums::PID::Fast);
     tracer.run(Enums::LEFT, 2300);
-    tracer.setParam(0);
+    tracer.setParam(Enums::PID::Midium);
     tracer.run(Enums::LEFT, 2250);
 
     mv_basic.stop();
