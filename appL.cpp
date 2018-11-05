@@ -34,11 +34,12 @@ void main_task(intptr_t unused) {
 
     Run_RL running_L;
     bool isRemoteStart = false;
+    bool isSetupPID = false;
     if (isRemoteStart) {
         running_L.calibration_L(&ptrs);
     } else {
         // タッチスタート の初期設定
-        running_L.calibration_touch(&ptrs, false);
+        running_L.calibration_touch(&ptrs, isSetupPID);
     }
 /*
 */
@@ -49,17 +50,16 @@ void main_task(intptr_t unused) {
     //###  【4】 AIアンサー  ###//
     AI_answer ai_ans;
     ai_ans.init();
-//    ai_ans.readImg_digital(&ptrs);  // ;走行
+    ai_ans.readImg_digital(&ptrs);  // ;走行
     ai_ans.readImg_analog(&ptrs);  // ;走行
     // ブロックを動かす
     ai_ans.answer_forBlock();
     ai_ans.terminate();
-/*
 
     //###   駐車   ###//
     Parking parking;
     parking.after_AI();
-*/
+
     ext_tsk();
 }
 

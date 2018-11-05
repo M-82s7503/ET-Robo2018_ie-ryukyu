@@ -214,7 +214,6 @@ void AI_answer::readImg_analog(Pointers* ptrs_p) {
     mv_basic.raiseArm(30, 30);
     mv_basic.stop();
     clock.wait(500);
-/*
 
     // 数字画像まで移動
     // 一旦マットに出る。
@@ -232,8 +231,7 @@ void AI_answer::readImg_analog(Pointers* ptrs_p) {
     straight.run(Enums::Colors::WHITE, Enums::FRONT, 30);  // 〜アナログカード
 
     //###  3return 走行  ###//
-    //--  1 return  --//
-    // 開始位置に移動
+    // 初期位置に移動
     straight.run(Enums::FRONT, sensor_dist/2);
     mv_basic.stop();
     moveTemps.ride_onLine_vertical(Enums::Colors::BLACK, Enums::Directs::LEFT);
@@ -250,14 +248,15 @@ void AI_answer::readImg_analog(Pointers* ptrs_p) {
     straight.run(Enums::Colors::BLACK, Enums::Directs::FRONT, 30);  // 余白 上側
     straight.run(Enums::FRONT, sensor_dist);
 
+    //--  <1> return 目  --//
+    // 開始位置に移動
     moveUtil.turn(-90);
     turn_oneSide.run(Enums::RIGHT, 90);
     mv_basic.stop();
     // 読み取り実行：1
     analog_read_pattern(reading_analog, 1, straight, moveTemps, mv_basic);
-    mv_basic.stop();
 
-    //--  <2> 横・下側  --//
+    //--  <2>  return 目  --//
     // 開始位置に移動
     turn.run(Enums::RIGHT, 90);
     turn_oneSide.run(Enums::LEFT, 90);
@@ -265,21 +264,20 @@ void AI_answer::readImg_analog(Pointers* ptrs_p) {
     // 読み取り実行：2
     reading_analog.setSpeed(8);
     analog_read_pattern(reading_analog, 2, straight, moveTemps, mv_basic);
-    mv_basic.stop();
 
 
-    //--  <3> 縦  --//
+    //--  <3> return 目  --//
     // 開始位置に移動
     turn.run(Enums::LEFT, 90);
     turn_oneSide.run(Enums::RIGHT, 90);  // 白が見えるまで回転。
+/*
 */
-    // 読み取り実行
+    // 読み取り実行：3
     reading_analog.setSpeed(12);
     analog_read_pattern(reading_analog, 3, straight, moveTemps, mv_basic);
-    mv_basic.stop();
 
-
-/*    reading_analog.f_write();
+    // log 書き出し。
+    reading_analog.f_write();
 
     //--  パターンマッチで、カードの数字を予想  --//
     PatternMatcher ptMatch;
@@ -288,7 +286,7 @@ void AI_answer::readImg_analog(Pointers* ptrs_p) {
     msg_f(ptMatch.getAns_A(), 5);
     // 2進数に変換
     conv_Binary_num(ptMatch.getAns_A(), analyze_result[1]);
-*/}
+}
 
 // 読み取り実行（黒マットから黒マットまで）
 void AI_answer::analog_read_pattern(Reading_return3 reading_analog, int8_t return_th, Straight straight, MoveTemps moveTemps, Move_Basic mv_basic) {
@@ -297,17 +295,16 @@ void AI_answer::analog_read_pattern(Reading_return3 reading_analog, int8_t retur
     straight.run(Enums::Colors::BLACK, Enums::BACK, img_yohaku_tate/2+8);
     mv_basic.stop();
     // 位置合わせ？
-    straight.run(Enums::FRONT, sensor_dist*1.2);
+    straight.run(Enums::FRONT, img_yohaku_tate);
     mv_basic.stop();
-    clock.wait(600);  // 段差を越えることになるので。
+    clock.wait(800);  // 段差を越えることになるので。
     //moveTemps.ride_onLine_vertical(Enums::Colors::BLACK, Enums::Directs::LEFT);
-    // 余白分進む。
-    straight.run(Enums::FRONT, img_yohaku_tate-sensor_dist*1.2);
     // 読み取り
     reading_analog.run(return_th);
     // 黒マットまで進む。
     straight.run(Enums::FRONT, img_yohaku_tate/1.5);
     straight.run(Enums::Colors::BLACK, Enums::FRONT, img_yohaku_tate);
+    mv_basic.stop();
 }
 
 void AI_answer::conv_Binary_num(int8_t ans_num, int8_t arr[3]) {

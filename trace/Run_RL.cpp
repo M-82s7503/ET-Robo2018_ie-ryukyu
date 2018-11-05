@@ -188,7 +188,6 @@ void Run_RL::run_L(Pointers* ptrs_p, bool isRemoteStart) {
     msg_clear();
 
     //###  ライントレース  ###//
-/*
     tracer.setParam(Enums::PID::Fast);
     tracer.run(Enums::LEFT, 2500);
     tracer.setParam(Enums::PID::Midium);
@@ -199,7 +198,7 @@ void Run_RL::run_L(Pointers* ptrs_p, bool isRemoteStart) {
     tracer.run(Enums::LEFT, 2000);
     tracer.setParam(Enums::PID::Fast);
     tracer.run(Enums::LEFT, 2300);
-*/
+/**/
     tracer.setParam(Enums::PID::Midium);
     tracer.run(Enums::LEFT, 1000);
 

@@ -27,24 +27,30 @@ using namespace ev3api;
 class Move_block
 {
 private:
-    MoveUtil moveutil;
-    Motor leftWheel;
+/*    Motor leftWheel;
     Motor rightWheel;
     ColorSensor colorSensor;
 //    TouchSensor touchSensor;
+*/
+    MoveUtil moveutil;
     Clock clock;
-    int8_t answer[2][3];
+    // もしもの時のために、ダミーデータを用意？(笑)
+    int8_t answer[2][3] = {
+        {0, 1, 1},  // digital
+        {0, 1 ,0}   // analog
+    };
 
-    //int answer[2][3] =    {{0, 1, 1},{0, 1 ,0}};
-    //int j;
-    const int duration = 1300;
-    const int sens_dist = 60;
+    const int duration = 600;
+    const int sensor_dist = 35;
 
     // [0:digital, 1:analog][行数]
     const Enums::Colors block_colors[2][3] = {
         {Enums::Colors::BLUE, Enums::Colors::YELLOW, Enums::Colors::RED},
         {Enums::Colors::RED, Enums::Colors::GREEN, Enums::Colors::RED}
     };
+
+    // 計測数値
+    int8_t line_width = 20;  // 線の幅（2cm）
 
 public:
     Move_block(int8_t analyze_result[2][3]);
