@@ -32,7 +32,7 @@ void main_task(intptr_t unused) {
     //      $ screen /dev/tty.MindstormsEV3-SerialPor 115200
     // を実行する。
 
-    bool isRemoteStart = true;
+    bool isRemoteStart = false;
     int block_code = 15432;
     Run_RL running_R;
     if (isRemoteStart) {
@@ -40,7 +40,7 @@ void main_task(intptr_t unused) {
         msg_f(block_code, 0);
     } else {
         // タッチスタート の初期設定
-        running_R.calibration_touch(&ptrs, true);
+        running_R.calibration_touch(&ptrs, false);
     }
 
     //###  【1】 ライントレース  ###//

@@ -32,7 +32,7 @@ Move_block::Move_block(int8_t analyze_result[2][3]):
 
 
 
-void Move_block::Decision_Left(int j)
+void Move_block::Decision_Analog(int j)
 {
 	if(answer[0][j] == 0) {
         moveutil.turn(-45);
@@ -56,7 +56,7 @@ void Move_block::Decision_Left(int j)
     }
 }
 
-void Move_block::Decision_Right(int j)
+void Move_block::Decision_Digital(int j)
 {
 	if(answer[1][j] == 0)
     {
@@ -66,6 +66,9 @@ void Move_block::Decision_Right(int j)
             moveutil.turn(-60);
             moveutil.raiseArm(30, 20);//アームを下に動かす
             clock.sleep(duration);
+
+            moveutil.turn(-180);
+            moveutil.stop();
     }
         else if(answer[1][j] == 1)
         {
@@ -83,26 +86,19 @@ void Move_block::turn_case(int j)
     switch(j)
     {
         case 0:
-            moveutil.raiseArm(30, 20);
-            //moveutil.to_color(Enums::WHITE);
-            moveutil.straight(sens_dist);
-            moveutil.to_color(static_cast<int>( Enums::WHITE ));
-            moveutil.straight(sens_dist);
-            moveutil.straight(180);
-            moveutil.to_color(static_cast<int>( Enums::BLACK ));
-            moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),0,180,0);
+            /*moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),0,180,0);
             moveutil.stop();
             clock.sleep(duration);
             moveutil.straight(70);
             moveutil.turn(-90);
-            moveutil.straight(30);
+            moveutil.straight(30);*/
             moveutil.to_color(static_cast<int>( Enums::BLACK ));
             moveutil.straight(sens_dist);
             moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),180,0,0);
             moveutil.stop();
             clock.sleep(duration);
             moveutil.to_color(BLUE);
-            Decision_Right(j);
+            Decision_Digital(j);
             break;
         case 1:
             moveutil.straight(-70);
@@ -113,7 +109,7 @@ void Move_block::turn_case(int j)
             moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),180,0,0);
             moveutil.stop();
             moveutil.to_color(static_cast<int>( Enums::YELLOW ));
-            Decision_Right(j);
+            Decision_Digital(j);
             break;
         case 2:
             moveutil.straight(-70);
@@ -124,28 +120,70 @@ void Move_block::turn_case(int j)
             moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),180,0,0);
             moveutil.stop();
             moveutil.to_color(static_cast<int>( Enums::RED ));
-            Decision_Right(j);
+            Decision_Digital(j);
             break;       
     }
 }
 
 
 // デジタル側のみ、移動させるパターン
-void Move_block::by_turn()
+void Move_block::by_turn(Pointers pt_s)
 {
-    moveutil.setSpeed(10);
-    turn_case(0);
+    Tracer tracer(pt_s);
+    tracer.setParam(Enums::PID::Midium);
+    Turn_oneSide turn_oneSide(pt_s);
+    Turn turn(pt_s);
+    Move_Basic mv_basic(pt_s);
+    moveutil.setSpeed(15);
+    
+    // 数字画像（マットに出たところ） -> 最初の線
+    moveutil.raiseArm(30, 20);
+    //moveutil.to_color(Enums::WHITE);
+    moveutil.straight(sens_dist);
+    moveutil.to_color(static_cast<int>( Enums::WHITE ));
+    moveutil.straight(sens_dist);
+    mv_basic.stop();
+    clock.wait(1000);
+    // 最初の太線
+    moveutil.to_color(static_cast<int>( Enums::BLACK ));
+    mv_basic.stop();
+    clock.wait(1000);
+
+    // ライントレースでデジタル側へ？
+    //tracer.setParam(Enums::PID::Midium);
+    //tracer.run(Enums::LEFT, );
+
+    // to_color で行ってみる。
+    moveutil.straight(sens_dist*2);
+    moveutil.turn(-90);
+    moveutil.stop();
+    moveutil.to_color(static_cast<int>( Enums::BLACK ));
+    turn_oneSide.run(Enums::Directs::LEFT, 90);
+    mv_basic.stop();
+    moveutil.to_color(static_cast<int>( Enums::BLACK ));
+
+    // 線に着いた時点 → 次の線に移動する動作 まで
+    moveutil.straight(sens_dist);
+    turn.to_color_turn(Enums::Colors::BLACK, Enums::Directs::LEFT, 90);
+    tracer.run(Enums::RIGHT, block_colors[0][0]);
+    Decision_Digital(0);
+    tracer.run(Enums::LEFT, 70);
+    moveutil.turn(-90);
+    moveutil.stop();
+    moveutil.to_color(static_cast<int>( Enums::BLACK ));
+
+/*
+    //turn_case(0);
     turn_case(1);
     turn_case(2);
     moveutil.straight(-130);
     moveutil.turn(90);
+*/
 }
 
 // ブロックを移動せず、素通りするパターン
 void Move_block::through()
 {
-//Pointers pt_s(&leftWheel, &rightWheel, &colorSensor, &touchSensor);
-//Tracer tracer(pt_s);
     moveutil.raiseArm(30, 20);
     moveutil.to_color(static_cast<int>( Enums::WHITE ));
     moveutil.to_color(static_cast<int>( Enums::BLACK ));

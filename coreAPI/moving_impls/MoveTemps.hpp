@@ -1,4 +1,8 @@
+#ifndef MOVE_TEMPS_H_
+#define MOVE_TEMPS_H_
+
 #include <cstdlib>
+#include <math.h>
 
 #include "Enums.h"
 #include "DistMeasure.h"
@@ -25,7 +29,9 @@ class MoveTemps {
 
     // 目の前の線に、ちょうど垂直になるように回転する。
     bool ride_onLine_vertical(Enums::Colors in_c, Enums::Directs start_d);
-
+    float getRCos() {
+      return cos(halfDeg * 3.14 / 180);
+    }
 
   private:
     Enums::Directs direct;
@@ -33,6 +39,7 @@ class MoveTemps {
     DistMeasure distMeasure;
     int speed = 20;
     const int8_t divide_unit = 25;
+    int halfDeg;
 
     ColorSensor* colorSensor;
     Clock clock;
@@ -41,3 +48,6 @@ class MoveTemps {
     Straight mv_straight;
     Turn mv_turn;
 };
+
+
+#endif // MOVE_TEMPS_H_

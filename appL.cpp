@@ -44,7 +44,7 @@ void main_task(intptr_t unused) {
 */
 
     //###  【3】 ライントレース  ###//
-    //running_L.run_L(&ptrs, isRemoteStart);
+    running_L.run_L(&ptrs, isRemoteStart);
 
     //###  【4】 AIアンサー  ###//
     AI_answer ai_ans;
@@ -54,11 +54,11 @@ void main_task(intptr_t unused) {
     // ブロックを動かす
     ai_ans.answer_forBlock();
     ai_ans.terminate();
+/*
 
     //###   駐車   ###//
     Parking parking;
     parking.after_AI();
-/*
 */
     ext_tsk();
 }

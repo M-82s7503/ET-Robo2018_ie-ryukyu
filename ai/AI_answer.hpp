@@ -37,6 +37,7 @@ class AI_answer {
   private:
     Clock clock;
     MoveUtil moveUtil;
+    Pointers* pts;
 
     const int8_t pwm = (Motor::PWM_MAX) / 4;
 
@@ -49,7 +50,7 @@ class AI_answer {
     void init_arr_all0(float* arr, int arr_size);
 
     // その他
-    void analog_read_pattern(Reading_return3 reading_analog, int8_t return_th, Straight straight, MoveTemps moveTemps);
+    void analog_read_pattern(Reading_return3 reading_analog, int8_t return_th, Straight straight, MoveTemps moveTemps, Move_Basic mv_basic);
     void conv_Binary_num(int8_t ans_num, int8_t arr[3]);
 
     /*  コース の計測データ  */

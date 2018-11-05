@@ -77,7 +77,7 @@ float Turn_oneSide::decide_pwm_l(){
 }
 
 bool Turn_oneSide::break_condition(){
-  msg_f(endDig, 4);
+  //msg_f(endDig, 4);
   // break condition なので。
   switch (which_Wheel) {
     case Enums::LEFT:

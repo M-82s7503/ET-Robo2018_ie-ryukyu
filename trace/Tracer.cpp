@@ -8,11 +8,11 @@ Tracer::Tracer(Pointers pt_s):
 {
     target_val = 11;
     // 初期値
-    setParam(0);
+    setParam(Enums::PID::Midium);
     setVector(Enums::LEFT, 0);
 }
 
-void Tracer::setParam(int pid_pattern) {
+void Tracer::setParam(Enums::PID pid_pattern) {
     switch(pid_pattern) {
         /**
          *   ● 速度
@@ -65,12 +65,26 @@ void Tracer::setVector(Enums::Directs LorR, int distance) {
     // 「向き」を指定
     line_side = LorR;
     dist = distance;
+
+    isToColor_mode = false;
 }
 // .run(【方向】, 【距離など】) で一発で実行できるようにしたver.
 void Tracer::run(Enums::Directs direct, int distance) {
     setVector(direct, distance);
     Moving::run();
 }
+void Tracer::run(Enums::Directs direct, Enums::Colors color) {
+    setToColor(direct, color);
+    Moving::run();
+}
+void Tracer::setToColor(Enums::Directs LorR, Enums::Colors color) {
+    till_color = color;
+    isToColor_mode = true;  // ToVector でフラグを戻すことを忘れない！
+    // param の処理
+
+    // break_condision() でフラグ処理する。
+}
+
 
 
 // +,- を逆にするなら、 decide_pwm_~ のl,r を入れ替えるのが一番楽かも。
@@ -117,7 +131,10 @@ bool Tracer::break_condition() {
         return true;
     }
     // 【break条件】その他
-
+    // to color
+    if (isToColor_mode && colorSensor->getColorNumber() == static_cast<int>(till_color)) {
+        return true;
+    }
     // 続行
     return false;
 }

@@ -26,8 +26,8 @@ class To_Color_IF {
 〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜
   public:
     // 走行
-    void run(Enums::Directs direct, int distance);
-    void setToColor(Enums::Directs LorR, int distance);
+    void run(Enums::Directs direct, Enums::Colors color);
+    void setToColor(Enums::Directs LorR, Enums::Colors color);
   private:
     Enums::Colors till_color;
     bool isToColor_mode = false;
@@ -46,10 +46,22 @@ void 【クラス名】::run(Enums::Directs LorR, Enums::Colors color) {
 // オーバーライドする。
 void 【クラス名】::setToColor(Enums::Directs LorR, Enums::Colors color) {
     till_color = color;
-
+    isToColor_mode = true;  // ToVector でフラグを戻すことを忘れない！
     // param の処理
 
     // break_condision() でフラグ処理する。
+}
+
+
+bool Tracer::break_condition() {
+        ・・・
+
+    // 【break条件】その他
+    if (isToColor && colorSensor->getColorNumber() == static_cast<int>(till_color)) {
+        return true;
+    }
+    // 続行
+    return false;
 }
 
 〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜〜

@@ -5,6 +5,10 @@
 //#include "Moveutil_ai_block.h"
 #include "Moveutil.h"
 
+#include "MoveTemps.hpp"
+#include "Tracer.hpp"
+
+
 #include "Enums.h"
 /*
 #define NONE 0    // 無し
@@ -36,11 +40,17 @@ private:
     const int duration = 1300;
     const int sens_dist = 60;
 
+    // [0:digital, 1:analog][行数]
+    const Enums::Colors block_colors[2][3] = {
+        {Enums::Colors::BLUE, Enums::Colors::YELLOW, Enums::Colors::RED},
+        {Enums::Colors::RED, Enums::Colors::GREEN, Enums::Colors::RED}
+    };
+
 public:
     Move_block(int8_t analyze_result[2][3]);
-    void by_turn();
+    void by_turn(Pointers pt_s);
     void turn_case(int j);
-    void Decision_Left(int i);
-    void Decision_Right(int i);
+    void Decision_Analog(int i);
+    void Decision_Digital(int i);
     void through();
 };

@@ -17,6 +17,9 @@ using namespace ev3api;
 class Reading_return3 : public Moving {
   public:
     Reading_return3(Pointers pt_s, int base_pwm, float* arr_analog, int distance);
+    void setSpeed(int base_pwm) {
+      speed = base_pwm;
+    }
     void run(int return_th);
     void f_write();  // ファイルに出力
 

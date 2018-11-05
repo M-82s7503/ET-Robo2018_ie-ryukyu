@@ -106,7 +106,6 @@ bool MoveTemps::ride_onLine_vertical(Enums::Colors line_c, Enums::Directs start_
   mv_basic.raiseArm(35, 20);
   clock.wait(500);
 
-  int halfDeg;
   Enums::Directs against_d = (start_d == Enums::LEFT) ? Enums::RIGHT : Enums::LEFT;
 
   //##  start_d 方向に、線を探しに行く  ##//
