@@ -27,7 +27,7 @@ class Run_RL {
     void touch_start(Pointers ptrs);
     // 初期位置コードの桁数を入力する。
 
-    const int8_t MESSAGE_LEN = 4;
+    const int8_t MESSAGE_LEN = 5;
     Clock clock;
     int8_t white_val = -1, 
             black_val = -1;

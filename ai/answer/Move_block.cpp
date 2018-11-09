@@ -32,7 +32,33 @@ Move_block::Move_block(int8_t analyze_result[2][3])
 }
 
 
+//<<<  上側が 1, 下側が 0  >>>//
+// 読み取りの順序の関係で、
+//      0:digital,  1:analog
+// で実装してるので、逆になる。
+// digital(0) なら 0 が 左(-), 1 が 右(+)
+// analog(1) なら  1 が 左(-), 0 が 右(+)
+//    =>  analog/digital と 値 が同じなら-、違うなら+。
+void Move_block::shift_block(int8_t i_ad, int8_t i_place) {
+    moveutil.setSpeed(8);
+    moveutil.to_color( static_cast<int>(block_colors[i_ad][i_place]) );
 
+    int8_t direct_sign = 1;
+    if (i_ad == answer[i_ad][i_place]) {
+        direct_sign = -1;
+    }
+    moveutil.turn(direct_sign*60);
+    moveutil.raiseArm(90, 20);//アームを上に動かす
+    //clock.sleep(duration);
+    moveutil.turn(-direct_sign*60);
+    moveutil.raiseArm(30, 20);//アームを下に動かす
+    //clock.sleep(duration);
+
+    moveutil.setSpeed(12);
+    moveutil.straight(-70);
+    moveutil.stop();
+}
+/*
 void Move_block::Decision_Analog(int j)
 {
 	if(answer[0][j] == 0) {
@@ -81,19 +107,20 @@ void Move_block::Decision_Digital(int j)
             moveutil.raiseArm(30, 20);//アームを下に動かす
             clock.sleep(duration);
         }
-}
+}*/
 
+/*
 void Move_block::turn_case(int j)
 {
     switch(j)
     {
         case 0:
-            /*moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),0,180,0);
+            moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),0,180,0);
             moveutil.stop();
             clock.sleep(duration);
             moveutil.straight(70);
             moveutil.turn(-90);
-            moveutil.straight(30);*/
+            moveutil.straight(30);
             moveutil.to_color(static_cast<int>( Enums::BLACK ));
             moveutil.straight(sensor_dist);
             moveutil.to_color_turn(static_cast<int>( Enums::BLACK ),180,0,0);
@@ -125,8 +152,27 @@ void Move_block::turn_case(int j)
             Decision_Digital(j);
             break;       
     }
-}
+}*/
 
+
+void Move_block::next_line(Pointers pt_s, Move_Basic mv_basic, Turn turn) {
+    // 左回転して、黒じゃなければ繰り返す。
+    while ( pt_s.getColorSensor()->getColorNumber() != static_cast<int>(Enums::Colors::BLACK)) {
+        moveutil.to_color(static_cast<int>( Enums::BLACK ));
+        mv_basic.stop();
+        //================     追加した。未検証。検証必要。     ===================//
+        moveutil.straight( line_width/3 );
+        turn.run(Enums::Directs::LEFT, 10);
+        mv_basic.stop();
+        clock.wait(300);
+    }
+    turn.run(Enums::Directs::RIGHT, 10);
+    // ＜曲がる動き＞
+    moveutil.straight(sensor_dist+line_width*2/3+15);  //少しだけ前に出る
+    moveutil.turn(-80);
+    turn.run(Enums::Directs::LEFT, Enums::Colors::BLACK);
+    mv_basic.stop();
+}
 
 // デジタル側のみ、移動させるパターン
 void Move_block::by_turn(Pointers pt_s)
@@ -159,7 +205,7 @@ void Move_block::by_turn(Pointers pt_s)
     moveutil.turn(-90);
     moveutil.stop();
     moveutil.to_color(static_cast<int>( Enums::BLACK ));  // 到着
-    // → 【digital 1つ目】
+    // 【digital 1つ目】の方向に向く
     //turn_oneSide.run(Enums::Directs::LEFT, 90);
     moveutil.straight( (sensor_dist+line_width)/2.3 );
     mv_basic.stop();
@@ -167,39 +213,32 @@ void Move_block::by_turn(Pointers pt_s)
     moveutil.stop();
     moveutil.straight( sensor_dist *moveTemps.getRCos() + 20 );
     turn.run(Enums::Directs::RIGHT, 85);
-    // 左回転して、黒じゃなければ繰り返す。
-    while ( pt_s.getColorSensor()->getColorNumber() != static_cast<int>(Enums::Colors::BLACK)) {
-        moveutil.to_color(static_cast<int>( Enums::BLACK ));
-        //================     追加した。未検証。検証必要。     ===================//
-        moveutil.straight( line_width/3 );
-        mv_basic.stop();
-        turn.run(Enums::Directs::LEFT, 10);
-        mv_basic.stop();
-        clock.wait(300);
-    }
-    turn.run(Enums::Directs::RIGHT, 10);
-    // ＜曲がる動き＞
-    moveutil.straight(sensor_dist+line_width*2/3+15);
-    moveutil.turn(-90);
-    turn.run(Enums::Directs::LEFT, Enums::Colors::BLACK);
-    mv_basic.stop();
-    //clock.wait(1000);
 
-    // ブロック移動。
-    moveutil.setSpeed(8);
-    moveutil.to_color(BLUE);
-    Decision_Digital(0);
-    moveutil.setSpeed(15);
+    // 【digital 1つ目】
+    next_line(pt_s, mv_basic, turn)
+    // ブロックの方向を向いた状態 → ブロックを移動後元の位置に戻る。
+    shift_block(0, 0);
+    moveutil.turn(90);
+    moveutil.stop();
 
-    // → 【digital 2つ目】
-    moveutil.to_color(static_cast<int>( Enums::WHITE ));
+    // 【digital 2つ目】
+/*    moveutil.to_color(static_cast<int>( Enums::WHITE ));
     moveutil.to_color(static_cast<int>( Enums::BLACK ));
-    moveutil.straight(line_width*2);
+    moveutil.straight(line_width*2);*/
+    next_line(pt_s, mv_basic, turn)
+    // ブロックの方向を向いた状態 → ブロックを移動後元の位置に戻る。
+    shift_block(0, 1);
+    moveutil.turn(90);
+    moveutil.stop();
 
-    // → 【digital 3つ目】
-    moveutil.to_color(static_cast<int>( Enums::WHITE ));
-    moveutil.to_color(static_cast<int>( Enums::BLACK ));
-    moveutil.straight(line_width*2);
+
+    // 【digital 3つ目】
+    next_line(pt_s, mv_basic, turn)
+    // ブロックの方向を向いた状態 → ブロックを移動後元の位置に戻る。
+    shift_block(0, 1);
+    straight.run(Enums::Directs::BACK, 50);  // 駐車のスタート地点までバックする。
+    moveutil.turn(90);
+    moveutil.stop();
 
 /* 
     // 線に着いた時点 → 次の線に移動する動作 まで

@@ -45,18 +45,23 @@ private:
 
     // [0:digital, 1:analog][行数]
     const Enums::Colors block_colors[2][3] = {
+        // digital
         {Enums::Colors::BLUE, Enums::Colors::YELLOW, Enums::Colors::RED},
+        // analog
         {Enums::Colors::RED, Enums::Colors::GREEN, Enums::Colors::RED}
     };
 
     // 計測数値
     int8_t line_width = 20;  // 線の幅（2cm）
 
+    void next_line();
+    void shift_block(int8_t i_ad, int8_t i_place);
+
 public:
     Move_block(int8_t analyze_result[2][3]);
     void by_turn(Pointers pt_s);
-    void turn_case(int j);
-    void Decision_Analog(int i);
-    void Decision_Digital(int i);
+//    void turn_case(int j);
+//    void Decision_Analog(int i);
+//    void Decision_Digital(int i);
     void through();
 };

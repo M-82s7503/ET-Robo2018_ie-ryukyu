@@ -33,8 +33,8 @@ void main_task(intptr_t unused) {
     // を実行する。
 
     Run_RL running_L;
-    bool isRemoteStart = false;
-    bool isSetupPID = false;
+    bool isRemoteStart = true;
+    bool isSetupPID = true;
     if (isRemoteStart) {
         running_L.calibration_L(&ptrs);
     } else {

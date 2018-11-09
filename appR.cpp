@@ -32,9 +32,9 @@ void main_task(intptr_t unused) {
     //      $ screen /dev/tty.MindstormsEV3-SerialPor 115200
     // を実行する。
 
-    bool isRemoteStart = false;
-    bool isSetupPID = false;
-    int block_code = 15432;
+    bool isRemoteStart = true;
+    bool isSetupPID = true;
+    int block_code = 12345;
     Run_RL running_R;
     if (isRemoteStart) {
         block_code = running_R.calibration_R(&ptrs);

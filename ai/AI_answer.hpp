@@ -32,6 +32,7 @@ class AI_answer {
     void terminate();
 
     // 解析結果を２進数として保存
+    // 0:digital,  1:analog
     int8_t analyze_result[2][3];
 
   private:
