@@ -215,7 +215,7 @@ void Move_block::by_turn(Pointers pt_s)
     turn.run(Enums::Directs::RIGHT, 85);
 
     // 【digital 1つ目】
-    next_line(pt_s, mv_basic, turn)
+    next_line(pt_s, mv_basic, turn);
     // ブロックの方向を向いた状態 → ブロックを移動後元の位置に戻る。
     shift_block(0, 0);
     moveutil.turn(90);
@@ -225,7 +225,7 @@ void Move_block::by_turn(Pointers pt_s)
 /*    moveutil.to_color(static_cast<int>( Enums::WHITE ));
     moveutil.to_color(static_cast<int>( Enums::BLACK ));
     moveutil.straight(line_width*2);*/
-    next_line(pt_s, mv_basic, turn)
+    next_line(pt_s, mv_basic, turn);
     // ブロックの方向を向いた状態 → ブロックを移動後元の位置に戻る。
     shift_block(0, 1);
     moveutil.turn(90);
@@ -233,10 +233,10 @@ void Move_block::by_turn(Pointers pt_s)
 
 
     // 【digital 3つ目】
-    next_line(pt_s, mv_basic, turn)
+    next_line(pt_s, mv_basic, turn);
     // ブロックの方向を向いた状態 → ブロックを移動後元の位置に戻る。
     shift_block(0, 1);
-    straight.run(Enums::Directs::BACK, 50);  // 駐車のスタート地点までバックする。
+    moveutil.straight(-50);  // 車体が入りきるスペースに入る(バック)
     moveutil.turn(90);
     moveutil.stop();
 

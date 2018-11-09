@@ -54,7 +54,7 @@ private:
     // 計測数値
     int8_t line_width = 20;  // 線の幅（2cm）
 
-    void next_line();
+    void next_line(Pointers pt_s, Move_Basic mv_basic, Turn turn);
     void shift_block(int8_t i_ad, int8_t i_place);
 
 public:
