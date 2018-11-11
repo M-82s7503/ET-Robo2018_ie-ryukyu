@@ -1,6 +1,5 @@
 #include "MoveUtil_Block.hpp"
 
-
 //初期化
 MoveUtil_Block::MoveUtil_Block():
     MoveUtil(), handWheel(PORT_A)
@@ -21,7 +20,6 @@ void MoveUtil_Block::back(int distance){
   endLeftDig = startLeftDig - (distance * 9 / 8);
 
   while (1) {
-    msg_f("straight...", 1);
     leftWheel.setPWM(-speed);
     rightWheel.setPWM(-speed);
 
@@ -43,18 +41,18 @@ void MoveUtil_Block::back(int distance){
 }
 
 /* 次に向かうべきブロッック置き場まで移動する */
-void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,int* car_degree,int block[4][4],int jud){
+void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,int* car_degree,int block[4][4],int color[4][4],int jud){
   
-  hand_move(jud);
+
   bool flag1,flag2;
 
   flag1 = flag2 = false;
 
-  // ブロックの移動                                                              
+  // ブロックの移動                                                                                    
   if(jud == -1){
-    straight(50);
+    hand_move(jud);
+    straight(100);
   }
-
 
   do{
     /* 機体の角度の調整 */
@@ -93,27 +91,27 @@ void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,in
 
       /* 目標のx座標まで移動する */
       while(*car_x != move_x){
-	if(*car_x > move_x){
-	  if(block[*car_y][*car_x-1] != AFTER_MOVE_BLOCK){
-	    straight(350);
-            if(*car_y != move_y && (*car_x-1) != move_x){
+        if(*car_x > move_x){
+          if(block[*car_y][*car_x-1] != AFTER_MOVE_BLOCK){
+            straight(350);
+            if(color[*car_y][*car_x-1] != color[move_x][move_y] && jud != 1){
               straight(100);
             }
             (*car_x)--;
-	  }else{
-	    break;
-	  }
-	}else{ 
-	  if(block[*car_y][*car_x+1] != AFTER_MOVE_BLOCK){
-	    straight(350);
-            if(*car_y != move_y && (*car_x+1) != move_x){
+          }else{
+            break;
+          }
+        }else{
+          if(block[*car_y][*car_x+1] != AFTER_MOVE_BLOCK){
+            straight(350);
+            if(color[*car_y][*car_x+1] != color[move_x][move_y] && jud != 1){
               straight(100);
             }
-	    (*car_x)++;
-	  }else{ 
-	    break;
-	  }
-	}
+            (*car_x)++;
+          }else{
+            break;
+          }
+        }
       }
     }
 
@@ -150,32 +148,33 @@ void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,in
 	  break;
 	}
       }
-    
+      
     /* 目標のy座標まで移動する */
-    while(*car_y != move_y){
-	if(*car_y > move_y){
-	  if(block[*car_y-1][*car_x] != AFTER_MOVE_BLOCK){
-	    straight(300);
-	    if((*car_y+1) != move_y && *car_x != move_x){
+      while(*car_y != move_y){
+        if(*car_y > move_y){
+          if(block[*car_y-1][*car_x] != AFTER_MOVE_BLOCK){
+            straight(300);
+            if(color[*car_y-1][*car_x] != color[move_x][move_y] && jud != 1){
               straight(100);
             }
-	    (*car_y)--;
-	  }else{
-	    break;
-	  }
-	}else{
-	  if(block[*car_y+1][*car_x] != AFTER_MOVE_BLOCK){
-	    straight(300);
-	    if((*car_y+1) != move_y && *car_x != move_x){
+            (*car_y)--;
+          }else{
+            break;
+          }
+        }else{
+          if(block[*car_y+1][*car_x] != AFTER_MOVE_BLOCK){
+            straight(300);
+            if(color[*car_y+1][*car_x] != color[move_x][move_y] && jud != 1){
               straight(100);
             }
-	    (*car_y)++;
-	  }else{
-	    break;
-	  }
-	}
+            (*car_y)++;
+          }else{
+            break;
+          }
+        }
       }
     }
+
 
     if(*car_x == move_x){
       flag1 = true;
@@ -188,6 +187,12 @@ void MoveUtil_Block::purpose_move(int* car_x,int* car_y,int move_x,int move_y,in
 
   }while(flag1 != true && flag2 != true);
   
+  // ブロックを読み取れる位置まで移動                                                                                                                                                            
+  if(jud == 1){
+    straight(60);
+    hand_move(jud);
+  }
+
 }
 
 void MoveUtil_Block::back_move(int car_degree,int* car_x,int* car_y){
@@ -250,23 +255,27 @@ void MoveUtil_Block::pid_straight(int distance){
 
 /* 引数によって機体のハンドを動かす */
 void MoveUtil_Block::hand_move(int jud){
+    
+  uint32_t end;
+
+  clock.reset();
+  end = clock.now();
 
   while(1){
+    end = clock.now();
     if(jud != 0){
       if(jud == 1){
-        handWheel.setPWM(2);
-        if(handWheel.getCount() > 100){
-          handWheel.stop();
-          break;
-        }
+        handWheel.setPWM(1);
       }else if(jud == -1){
-        handWheel.setPWM(-2);
-        if(handWheel.getCount() < -10){
-          handWheel.stop();
-          break;
-        }
+        handWheel.setPWM(-1);
       }
     }
+    msg_f(end, 2);
+    if(end > 7500){
+      handWheel.stop();
+      break;
+    }
+
   }
   
 }
